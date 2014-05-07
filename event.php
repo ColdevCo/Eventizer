@@ -8,109 +8,23 @@
  * Author URI: http://www.facebook.com
  */
 
-require "lib/field-type.php";
+register_activation_hook( __FILE__ , function() {
+	add_option( 'Install_Event_Setting', 'true' );	
+} );
 
-register_activation_hook( __FILE__ , 'register_event' );
-add_action( 'init' , 'register_event' );
-
-function register_event() {
-	$args = array(
-		'labels'        => array(
-			'name'               => 'Events',
-			'singular_name'      => 'Event',
-			'menu_name'          => 'Event',
-			'add_new'            => 'Add New',
-			'add_new_item'       => 'Add New Event',
-			'edit_item'          => 'Edit Event',
-			'new_item'           => 'New Event',
-			'view_item'          => 'View Event',
-			'search_items'       => 'Search Events',
-			'not_found'          => 'No events found',
-			'not_found_in_trash' => 'No events found in Trash'
-		),
-		'description'   => 'Event Management',
-		'supports'      => array( 'title', 'editor', 'thumbnail' ),
-		'menu_position' => 5,
-		'public'        => true
-	);
-	register_post_type( 'event', $args );
-}
-
-add_action('admin_menu', 'register_event_setting_submenu');
-function register_event_setting_submenu() {
-	add_submenu_page( 'edit.php?post_type=event' , 'setting' , 'Setting' , 'manage_options' , 'event-setting' , function() { include 'templates/setting.php'; } );
-}
-
-add_action( 'add_meta_boxes', 'add_event_details_meta_box' );
-function add_event_details_meta_box() {
-	add_meta_box( 'event-details-box', 'Detail', 'details_box_html', 'event', 'side', 'high' );
-}
-
-function details_box_html() {
-	global $post;
-	
-	wp_nonce_field( 'ev_details_box', 'ev_details_box_nonce' );
-
-	$fields   = array();
-	$fields[] = text( 'ev_price', array( 'label' => 'Price' ) );
-	$fields[] = textarea( 'ev_location', array( 'label' => 'Location' ) );
-
-	$fields = apply_filters( 'add_fields', $fields );
-
-	foreach ( $fields as $field ) {
-		echo $field;
-	}
-}
-
-add_action( 'save_post' , 'save_event_meta_value' );
-function save_event_meta_value( $post_id ) {
-
-	if ( ! isset( $_POST['ev_details_box_nonce'] ) ) {
-		return;
-	}
-
-	if ( ! wp_verify_nonce( $_POST['ev_details_box_nonce'], 'ev_details_box' ) ) {
-		return;
-	}
-
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-		return;
-	}
-
-	if ( isset( $_POST['post_type'] ) && 'event' == $_POST['post_type'] ) {
-
-		if ( ! current_user_can( 'edit_page', $post_id ) ) {
-			return;
-		}
-
-	} else {
-
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-	}
-
-	$price    = sanitize_text_field( $_POST['ev_price'] );
-	$location = sanitize_text_field( $_POST['ev_location'] );
-
-	update_post_meta( $post_id, 'ev_price', $price );
-	update_post_meta( $post_id, 'ev_location', $location );
-}
+$event = new Event;
 
 class Event {
 	private $_supports = array( 'title', 'editor', 'thumbnail' );
-	private $_meta_boxes = array(
-		array( 'name' => 'detail', 'context' => 'side', 'priority' => 'default' )
-	);
 	private $_custom_fields = array(
-			array( 'name' => 'ev_date' , 		'type' => 'datepicker' , 'box' => 'detail' ),
-			array( 'name' => 'ev_price' , 		'type' => 'number' , 'box' => 'detail' ),
-			array( 'name' => 'ev_location' , 	'type' => 'text' , 'box' => 'detail' )
+			array( 'name' => 'ev_date' , 'label' => 'Date' , 'type' => 'datepicker' ),
+			array( 'name' => 'ev_price' , 'label' => 'Price' , 'type' => 'text' ),
+			array( 'name' => 'ev_location' , 'label' => 'Location' , 'type' => 'textarea' )
 		);
 
 	public function __construct() {
-		register_activation_hook( __FILE__ , 'register_event_post_type' );
-		add_action('admin_menu', 'add_event_setting_submenu');
+		add_action( 'init' , array( $this , 'init' ) );
+		add_action( 'save_post' , array( $this , 'save' ) );
 	}
 
 	public function add_support( $support )
@@ -151,12 +65,9 @@ class Event {
 		$this->_custom_fields = $custom_fields;
 	}
 
-	public function get_custom_fields( $box = '' )
+	public function get_custom_fields()
 	{
-		if ( $box === '' )
-			return $this->_custom_fields;
-		else
-			return array_filter( $this->_custom_fields , function($cf) { return $cf['box'] === $box; } );
+		return $this->_custom_fields;
 	}
 
 	public function register_event_post_type()
@@ -176,7 +87,7 @@ class Event {
 				'not_found_in_trash' => 'No events found in Trash'
 				),
 			'description'	=> 'Event Management',
-			'supports'		=> array( 'title' , 'editor' , 'thumbnail' ),
+			'supports'		=> $this->_supports,
 			'menu_position'	=> 5,
 			'public'		=> true
 		);
@@ -203,12 +114,92 @@ class Event {
 		$wpdb->insert( $table_name , array( 'name' => 'event_attendance' , 	'value' => 'disable' ) );
 	}
 
-	public function add_event_setting_submenu()
+	public function init()
 	{
-		add_submenu_page( 'edit.php?post_type=event' , 'setting' , 'Setting' , 'manage_options' , 'event-setting' , function() { include 'templates/setting.php'; } );
+		$this->register_event_post_type();
+		$this->render();
+
+		if( is_admin() && get_option( 'Install_Event_Setting' ) == 'true' ) {
+			$this->create_event_setting_table();
+			delete_option( 'Install_Event_Setting' );
+		}
+
+		add_action( 'admin_menu' , function() {
+			add_submenu_page( 'edit.php?post_type=event' , 'setting' , 'Setting' , 'manage_options' , 'event-setting' , function() { include 'templates/setting.php'; } );		
+		} );
 	}
 
-	public function install()
+	public function details_form()
 	{
+		require "lib/field-type.php";
+
+		wp_nonce_field( 'ev_details_box', 'ev_details_box_nonce' );
+
+		$fields   = array();
+
+		foreach( $this->_custom_fields as $custom_field ) {
+			$field = '';
+			switch( $custom_field['type'] ) {
+				case 'text': 
+					$field = text( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
+					break;
+				case 'textarea': 
+					$field = textarea( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
+					break;
+				default:
+					$field = text( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
+			}
+
+			array_push( $fields , $field );
+		}
+		
+		$fields = apply_filters( 'add_event_fields', $fields );
+
+		foreach ( $fields as $field ) {
+			echo $field;
+		}
+	}
+
+	public function render()
+	{
+		add_action( 'add_meta_boxes', function() {
+			add_meta_box( 'event-details-box', 'Detail', array( $this , 'details_form' ) , 'event', 'normal', 'low' );
+		} );
+
+		do_action( 'event_render' );
+	}
+
+	public function save( $post_id )
+	{
+		if ( ! isset( $_POST['ev_details_box_nonce'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['ev_details_box_nonce'], 'ev_details_box' ) ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( isset( $_POST['post_type'] ) && 'event' == $_POST['post_type'] ) {
+
+			if ( ! current_user_can( 'edit_page', $post_id ) ) {
+				return;
+			}
+
+		} else {
+
+			if ( ! current_user_can( 'edit_post', $post_id ) ) {
+				return;
+			}
+		}
+
+		foreach( $this->_custom_fields as $custom_field ) {
+			update_post_meta( $post_id, $custom_field['name'], $custom_field['name'] );
+		}
+
+		do_action( 'event_save' , $post_id );
 	}
 }

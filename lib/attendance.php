@@ -7,15 +7,18 @@
 
 class EventAttendance {
 
-	public function save() {
+	public function save()
+	{
 
 	}
 
-	public function add_field() {
+	public function add_field()
+	{
 
 	}
 
-	public function install() {
+	public function install()
+	{
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . "event_attendance";
@@ -32,6 +35,11 @@ class EventAttendance {
 		
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
+	}
+
+	public function render()
+	{
+
 	}
 
 }

@@ -7,15 +7,13 @@
 
 class EventTicket {
 
-	public function save() {
+	public function save()
+	{
 
 	}
 
-	public function delete() {
-
-	}
-
-	public function install() {
+	public function enable()
+	{
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . "event_tickets";
@@ -29,6 +27,17 @@ class EventTicket {
 		
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
+	}
+
+	public function render()
+	{
+		require "field-type.php";
+
+		add_filter( 'add_fields' , function( $fields ) {
+			$fields[] = text( 'ev_ticket_name', array( 'label' => 'Ticket Name' ) );
+			$fields[] = text( 'ev_ticket_quota', array( 'label' => 'Quota' ) );
+			return $fields;
+		} );
 	}
 
 }
