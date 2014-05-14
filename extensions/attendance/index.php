@@ -1,9 +1,11 @@
 <?php
-
 /*
- * 
- *
- */
+Extension Name: Attendance
+Extension Description: Attendance
+Extension Creator: CoLD
+*/
+
+new EventAttendance;
 
 class EventAttendance {
 

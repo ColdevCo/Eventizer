@@ -1,11 +1,17 @@
 <?php
-
 /*
- * 
- *
- */
+Extension Name: Ticket
+Extension Description: To Manage Tickets
+Extension Creator: CoLD
+*/
+
+new EventTicket;
 
 class EventTicket {
+
+	public function __construct() {
+		add_action( 'init' , array( $this , 'render' ) );
+	}
 
 	public function save()
 	{
@@ -31,11 +37,9 @@ class EventTicket {
 
 	public function render()
 	{
-		require "field-type.php";
-
-		add_filter( 'add_fields' , function( $fields ) {
-			$fields[] = text( 'ev_ticket_name', array( 'label' => 'Ticket Name' ) );
-			$fields[] = text( 'ev_ticket_quota', array( 'label' => 'Quota' ) );
+		add_filter( 'add_event_fields' , function( $fields ) {
+			$fields[] = text( 'ev_ticket_name' , array( 'label' => 'Ticket Name' ) );
+			$fields[] = text( 'ev_ticket_quota' , array( 'label' => 'Quota' ) );
 			return $fields;
 		} );
 	}

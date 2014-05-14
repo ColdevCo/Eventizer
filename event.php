@@ -8,6 +8,13 @@
  * Author URI: http://www.facebook.com
  */
 
+define( '__EVENT_ASSETS_PATH__' , plugin_dir_path( __FILE__ ) . 'assets/' );
+define( '__EVENT_LIBRARIES_PATH__' , plugin_dir_path( __FILE__ ) . 'lib/' );
+define( '__EVENT_I18N_PATH__' , plugin_dir_path( __FILE__ ) . 'i18n/' );
+define( '__EVENT_TEMPLATE_PATH__' , plugin_dir_path( __FILE__ ) . 'templates/' );
+define( '__EVENT_EXTENSION_PATH__' , plugin_dir_path( __FILE__ ) . 'extensions/' );
+define( '__EVENT_WIDGET_PATH__' , plugin_dir_path( __FILE__ ) . 'widget/' );
+
 register_activation_hook( __FILE__ , function() {
 	add_option( 'Install_Event_Setting', 'true' );	
 } );
@@ -167,6 +174,36 @@ class Event {
 		} );
 
 		do_action( 'event_render' );
+
+		$tokens = token_get_all( file_get_contents( __EVENT_EXTENSION_PATH__ . 'ticket/index.php' ) );
+		$comments = array();
+		foreach($tokens as $token) {
+			if($token[0] == T_COMMENT || $token[0] == T_DOC_COMMENT) {
+				$comments[] = $token[1];
+			}
+		}
+
+		print_r( explode( "\n" , $comments[0] ) );
+	}
+
+	public function scan_extensions()
+	{
+		$ext_dir = plugin_dir_path( __FILE__ ) . 'lib/';
+		$dh = opendir( $ext_dir );
+
+		$exts = [];
+		while ( false !== ( $filename = readdir( $dh ) ) ) {
+			if( is_dir( $filename ) && $filename != '.' && $filename != '..' ) {
+				array_push( $exts , $filename );
+			}
+		}
+
+		return $exts;
+	}
+
+	public function load_enabled_extensions()
+	{
+
 	}
 
 	public function save( $post_id )
