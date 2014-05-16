@@ -10,12 +10,13 @@ new EventTicket;
 class EventTicket {
 
 	public function __construct() {
-		add_action( 'init' , array( $this , 'render' ) );
+		add_action( 'event_init' , array( $this , 'render' ) );
+		add_action( 'event_save' , array( $this , 'save' ) );
 	}
 
-	public function save()
+	public function save( $post_id )
 	{
-
+		
 	}
 
 	public function enable()

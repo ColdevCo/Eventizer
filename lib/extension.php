@@ -1,65 +1,50 @@
 <?php
 
-class EventExtention {
+function load_extensions() {
+	$extensions = scan_extensions();
+	foreach ( $extensions as $extension ) { include_once( $extension[ 'path' ] ); }
+}
 
-	public function __construct()
-	{
-		$this->load();
-	}
-
-	function static scan()
-	{
-		$exts_path = opendir( __EVENT_EXTENSION_PATH__ );
-
-		$exts = array();
-		while ( false !== ( $ext = readdir( $exts_path ) ) ) {
-			if( is_dir( $ext ) && $ext != '.' && $ext != '..' ) {
-				array_push( $exts , read_info( $ext ) );
-			}
-		}
-
-		return $exts;
-	}
-
-	function load()
-	{
-		$exts = self::scan();
-
-		foreach ( $exts as $ext ) {
-			include_once( $ext[ 'path' ] );
+function scan_extensions() {
+	$exts_path = opendir( __EVENT_EXTENSION_PATH__ );
+	$exts = array();
+	while ( false !== ( $ext = readdir( $exts_path ) ) ) {
+		$ext_path = __EVENT_EXTENSION_PATH__ . $ext;
+		if( is_dir( $ext_path ) && $ext != '.' && $ext != '..' ) {
+			array_push( $exts , read_info( $ext ) );
 		}
 	}
 
-	function static read_info( $extension )
-	{
-		$path 	= __EVENT_EXTENSION_PATH__ . $extension . '/index.php';
-		$tokens = token_get_all( file_get_contents( $path ) );
+	return $exts;
+}
 
-		$comments = array();
-		foreach ( $tokens as $token ) {
-			if ( $token[0] == T_COMMENT || $token[0] == T_DOC_COMMENT ) {
-				$comment = parse_info( $token[1] );
-				$comment[ 'path' ] = $path;
-				array_push( $comments , $comment );
-			}
+function read_info( $extension ) {
+	$path 	= __EVENT_EXTENSION_PATH__ . $extension . '/index.php';
+	$tokens = token_get_all( file_get_contents( $path ) );
+
+	$comments = array();
+	foreach ( $tokens as $token ) {
+		if ( $token[0] == T_COMMENT || $token[0] == T_DOC_COMMENT ) {
+			$comment = parse_info( $token[1] );
+			$comment[ 'path' ] = $path;
+			array_push( $comments , $comment );
 		}
-
-		return $comments[0];
 	}
 
-	function static parse_info( $comment )
-	{
-		$tokens = explode( "\n" , $comment );
+	return $comments[0];
+}
 
-		$info = array();
-		foreach ( $tokens as $token ) {
-			if ( strpos( $token , ':' ) !== true ) {
-				$key 	= explode( ':' , $token )[0];
-				$value 	= explode( ':' , $token )[1];
-				$info[ $key ] = $value;
-			}
+function parse_info( $comment ) {
+	$tokens = explode( "\n" , $comment );
+
+	$info = array();
+	foreach ( $tokens as $token ) {
+		if ( strpos( $token , ':' ) !== true ) {
+			$key 	= explode( ':' , $token )[0];
+			$value 	= explode( ':' , $token )[1];
+			$info[ $key ] = $value;
 		}
-
-		return $info;
 	}
+
+	return $info;
 }

@@ -15,6 +15,9 @@ define( '__EVENT_TEMPLATE_PATH__' , plugin_dir_path( __FILE__ ) . 'templates/' )
 define( '__EVENT_EXTENSION_PATH__' , plugin_dir_path( __FILE__ ) . 'extensions/' );
 define( '__EVENT_WIDGET_PATH__' , plugin_dir_path( __FILE__ ) . 'widget/' );
 
+include_once( 'lib/extension.php' );
+include_once( 'lib/field-type.php' );
+
 register_activation_hook( __FILE__ , function() {
 	add_option( 'Install_Event_Setting', 'true' );	
 } );
@@ -124,7 +127,10 @@ class Event {
 	public function init()
 	{
 		$this->register_event_post_type();
+		$this->load_enabled_extensions();
 		$this->render();
+
+		do_action( 'event_init' );
 
 		if( is_admin() && get_option( 'Install_Event_Setting' ) == 'true' ) {
 			$this->create_event_setting_table();
@@ -138,12 +144,9 @@ class Event {
 
 	public function details_form()
 	{
-		require "lib/field-type.php";
-
 		wp_nonce_field( 'ev_details_box', 'ev_details_box_nonce' );
 
 		$fields   = array();
-
 		foreach( $this->_custom_fields as $custom_field ) {
 			$field = '';
 			switch( $custom_field['type'] ) {
@@ -174,36 +177,11 @@ class Event {
 		} );
 
 		do_action( 'event_render' );
-
-		$tokens = token_get_all( file_get_contents( __EVENT_EXTENSION_PATH__ . 'ticket/index.php' ) );
-		$comments = array();
-		foreach($tokens as $token) {
-			if($token[0] == T_COMMENT || $token[0] == T_DOC_COMMENT) {
-				$comments[] = $token[1];
-			}
-		}
-
-		print_r( explode( "\n" , $comments[0] ) );
-	}
-
-	public function scan_extensions()
-	{
-		$ext_dir = plugin_dir_path( __FILE__ ) . 'lib/';
-		$dh = opendir( $ext_dir );
-
-		$exts = [];
-		while ( false !== ( $filename = readdir( $dh ) ) ) {
-			if( is_dir( $filename ) && $filename != '.' && $filename != '..' ) {
-				array_push( $exts , $filename );
-			}
-		}
-
-		return $exts;
 	}
 
 	public function load_enabled_extensions()
 	{
-
+		load_extensions();
 	}
 
 	public function save( $post_id )
