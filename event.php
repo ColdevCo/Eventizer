@@ -13,10 +13,15 @@ define( '__EVENT_LIBRARIES_PATH__' , plugin_dir_path( __FILE__ ) . 'lib/' );
 define( '__EVENT_I18N_PATH__' , plugin_dir_path( __FILE__ ) . 'i18n/' );
 define( '__EVENT_TEMPLATE_PATH__' , plugin_dir_path( __FILE__ ) . 'templates/' );
 define( '__EVENT_EXTENSION_PATH__' , plugin_dir_path( __FILE__ ) . 'extensions/' );
-define( '__EVENT_WIDGET_PATH__' , plugin_dir_path( __FILE__ ) . 'widget/' );
+define( '__EVENT_WIDGET_PATH__' , plugin_dir_path( __FILE__ ) . 'widgets/' );
+
+define( '__EVENT_EXTENSION_URL__' , plugins_url() . 'extensions/' );
+define( '__EVENT_WIDGET_URL__' , plugins_url() . 'widgets/' );
 
 include_once( 'lib/extension.php' );
+include_once( 'lib/widget.php' );
 include_once( 'lib/field-type.php' );
+include_once( 'lib/event_options.php' );
 
 register_activation_hook( __FILE__ , function() {
 	add_option( 'Install_Event_Setting', 'true' );	
@@ -120,8 +125,7 @@ class Event {
 		dbDelta( $sql );
 
 		$wpdb->insert( $table_name , array( 'name' => 'default_currency' , 	'value' => 'IDR' ) );
-		$wpdb->insert( $table_name , array( 'name' => 'event_ticket' , 		'value' => 'disable' ) );
-		$wpdb->insert( $table_name , array( 'name' => 'event_attendance' , 	'value' => 'disable' ) );
+		$wpdb->insert( $table_name , array( 'name' => 'enabled_extensions' , 	'value' => '' ) );
 	}
 
 	public function init()

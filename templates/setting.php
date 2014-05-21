@@ -1,4 +1,11 @@
 <?php
+global $wpdb;
+
+if( $_POST ) {
+      update_event_options( 'default_currency' , $_POST[ "event_default_currency" ] );
+      update_event_options( 'enabled_extensions' , serialize( $_POST['enabled_event_extensions'] ) );
+}
+
 $currencies = array (
             'ALL' => 'Albania Lek',
             'AFN' => 'Afghanistan Afghani',
@@ -115,11 +122,12 @@ $currencies = array (
             'YER' => 'Yemen Rial',
             'ZWD' => 'Zimbabwe Dollar'
         );
+$extensions = scan_extensions();
 ?>
 <link rel="stylesheet" href="../assets/css/style.css" />
 
 <style>
-	.wrapper {
+	.wrap {
 		margin: 30px 30px 30px 10px;
 		padding: 15px;
 		background-color: #fff;
@@ -129,16 +137,25 @@ $currencies = array (
 		margin-bottom: 15px;
 	}
 
+      .ev_setting_wrapper > * {
+            vertical-align: top;
+      }
+
 	.ev_setting_wrapper > label {
 		display: inline-block;
 		width: 210px;
 	}
 
 	.ev_setting_wrapper > input[type="text"],
-	.ev_setting_wrapper > select {
+	.ev_setting_wrapper > select,
+      .ev_setting_wrapper > .ev_setting_details {
 		display: inline-block;
 		width: 250px;
 	}
+
+      .ev_setting_details > p {
+            margin: 0 0 1em;
+      }
 
 	.ev_setting_wrapper > a {
 		text-decoration: none;
@@ -158,32 +175,40 @@ $currencies = array (
 	}
 </style>
 
-<div id="event-setting" class="wrapper">
+<div id="event-setting" class="wrap">
 	
 	<h2>Setting</h2>
 	<hr />
 
-	<div id="setting-default-currency" class="ev_setting_wrapper">
-		<label for="ev_currency">Currency</label>
-		<select>
-			<?php foreach ( $currencies as $key => $currency ) : ?>
-				<option type="text" name="ev_currency" value="<?php echo $key; ?>"><?php echo $currency . " ({$key})"; ?></option>
-			<?php endforeach; ?>
-		</select>
-	</div>
+      <form method="post">
+            <?php settings_fields( 'event-options-group' ); ?>
+            <?php do_settings_sections( 'event-options-group' ); ?>
 
-	<div id="setting-ext-ticket" class="ev_setting_wrapper">
-		<label for="ev_ext_ticket">Ext. Ticket</label>
-		<input type="checkbox" name="ev_ext_ticket">Enable</input>
-	</div>
+            <div id="setting-default-currency" class="ev_setting_wrapper">
+                  <label for="ev_currency">Currency</label>
+                  <select name="event_default_currency">
+                        <?php foreach ( $currencies as $key => $currency ) : ?>
+                              <option type="text" value="<?php echo $key; ?>" <?php echo get_event_options( 'default_currency' ) == $key ? 'selected' : ''; ?> ><?php echo $currency . " ({$key})"; ?></option>
+                        <?php endforeach; ?>
+                  </select>
+            </div>
 
-	<div id="setting-ext-attendance" class="ev_setting_wrapper">
-		<label for="ev_ext_attendance">Ext. Attendance</label>
-		<input type="checkbox" name="ev_ext_attendance">Enable</input>
-	</div>
+            <?php
+            foreach( $extensions as $extension ) :
+                  $extension[ 'slug' ] = strtolower( str_replace( ' ' , '-' , $extension[ 'Extension Name' ] ) );
+            ?>
+            <div id="setting-ext-<?php echo $extension[ 'slug' ] ?>" class="ev_setting_wrapper">
+                  <label>Ext. <?php echo $extension[ 'Extension Name' ]; ?></label>
+                  <div class="ev_setting_details">
+                        <p><?php echo $extension[ 'Extension Description' ]; ?></p>
+                        <input type="checkbox" name="enabled_event_extensions[]" value="<?php echo $extension[ 'Extension Name' ]; ?>" <?php echo in_array( $extension[ 'Extension Name' ] , unserialize( get_event_options( 'enabled_extensions' ) ) ) ? 'checked' : '' ?> >Enable</input>
+                  </div>
+            </div>      
+            <?php endforeach; ?>
 
-	<div id="setting-submit" class="ev_setting_wrapper">
-		<input type="submit" name="ev_setting_submit" value="Submit" />
-	</div>
+            <div id="setting-submit" class="ev_setting_wrapper">
+                  <?php submit_button(); ?>
+            </div>
+      </form>
 
 </div>
