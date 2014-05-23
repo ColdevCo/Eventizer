@@ -23,7 +23,33 @@ class EventList extends WP_Widget {
 	 */
 	public function widget( $args , $instance )
 	{
-		include( 'view.php' );	
+		if ( $instance ) {
+			$event_list_counter = $instance[ 'event-list-counter' ];
+		} else {
+			$event_list_counter = 10;
+		}
+		
+		$args   = array(
+			'posts_per_page'	=> $event_list_counter,
+			'paged'				=> 1,
+			'pagination'		=> false,
+			'post_type' 		=> 'event',
+			'post_status' 		=> 'publish',
+			'order'				=> 'ASC',
+			'orderby'			=> 'meta_value',
+			'meta_query'		=> array(
+				array(
+					'key'		=> 'ev_date',
+					'value'		=> date("Y-m-d"),
+					'compare'	=> '>=',
+					'type'		=> 'DATE',
+					),
+				),
+			'meta_key'			=> 'ev_date',
+		);
+		$events = get_posts( $args );
+
+		include( 'view/widget.php' );	
 	}
 
 	/**
@@ -35,7 +61,13 @@ class EventList extends WP_Widget {
 	 */
 	public function form( $instance )
 	{
-		
+		if ( $instance ) {
+			$event_list_counter = $instance[ 'event-list-counter' ];
+		} else {
+			$event_list_counter = 10;
+		}
+
+		include( 'view/backend-form.php');
 	}
 
 	/**
@@ -50,6 +82,7 @@ class EventList extends WP_Widget {
 	 */
 	public function update( $new_instance , $old_instance )
 	{
-
+		$instance[ 'event-list-counter' ] = $new_instance[ 'event-list-counter' ];
+		return $instance;
 	}
 }
