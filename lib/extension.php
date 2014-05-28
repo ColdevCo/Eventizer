@@ -2,7 +2,12 @@
 
 function load_extensions() {
 	$extensions = scan_extensions();
-	foreach ( $extensions as $extension ) { include_once( $extension[ 'path' ] ); }
+	$enabled_extensions = unserialize( get_event_options( 'enabled_extensions' ) );
+	foreach ( $extensions as $extension ) {
+		if ( in_array( $extension[ 'Extension Name' ] , $enabled_extensions ) ) {
+			include_once( $extension[ 'path' ] );
+		}
+	}
 }
 
 function scan_extensions() {
@@ -48,3 +53,5 @@ function parse_info( $comment ) {
 
 	return $info;
 }
+
+return load_extensions();

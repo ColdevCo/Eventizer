@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'widgets_init', function(){ register_widget( 'EventList' ); });
+register_widget( 'EventList' );
 
 class EventList extends WP_Widget {
 
@@ -10,7 +10,7 @@ class EventList extends WP_Widget {
 	 */
 	function __construct()
 	{
-		$this->WP_Widget( 'cold_event_list' , 'Event List' );
+		$this->WP_Widget( 'event_list' , 'Event List' );
 	}
 
 	/**

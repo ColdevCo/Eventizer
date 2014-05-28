@@ -1,7 +1,5 @@
 <?php
 
-load_widgets();
-
 function load_widgets() {
 	$widgets = scan_widgets();
 	foreach ( $widgets as $widget ) {
@@ -21,3 +19,5 @@ function scan_widgets() {
 
 	return $widgets;
 }
+
+return add_action( 'widgets_init', 'load_widgets' );

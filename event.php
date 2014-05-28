@@ -8,6 +8,10 @@
  * Author URI: http://www.facebook.com
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 define( '__EVENT_ASSETS_PATH__' , plugin_dir_path( __FILE__ ) . 'assets/' );
 define( '__EVENT_LIBRARIES_PATH__' , plugin_dir_path( __FILE__ ) . 'lib/' );
 define( '__EVENT_I18N_PATH__' , plugin_dir_path( __FILE__ ) . 'i18n/' );
@@ -15,19 +19,19 @@ define( '__EVENT_TEMPLATE_PATH__' , plugin_dir_path( __FILE__ ) . 'templates/' )
 define( '__EVENT_EXTENSION_PATH__' , plugin_dir_path( __FILE__ ) . 'extensions/' );
 define( '__EVENT_WIDGET_PATH__' , plugin_dir_path( __FILE__ ) . 'widgets/' );
 
-define( '__EVENT_EXTENSION_URL__' , plugins_url() . 'extensions/' );
-define( '__EVENT_WIDGET_URL__' , plugins_url() . 'widgets/' );
+define( '__EVENT_EXTENSION_URL__' , plugins_url() . '/extensions/' );
+define( '__EVENT_WIDGET_URL__' , plugins_url() . '/widgets/' );
 
+include_once( 'lib/event_options.php' );
+include_once( 'lib/field-type.php' );
 include_once( 'lib/extension.php' );
 include_once( 'lib/widget.php' );
-include_once( 'lib/field-type.php' );
-include_once( 'lib/event_options.php' );
 
 register_activation_hook( __FILE__ , function() {
 	add_option( 'Install_Event_Setting', 'true' );	
 } );
 
-$event = new Event;
+if ( ! class_exists( 'Event' ) ) :
 
 class Event {
 	private $_supports = array( 'title', 'editor', 'thumbnail' );
@@ -131,7 +135,6 @@ class Event {
 	public function init()
 	{
 		$this->register_event_post_type();
-		$this->load_enabled_extensions();
 		$this->render();
 
 		do_action( 'event_init' );
@@ -216,9 +219,13 @@ class Event {
 		}
 
 		foreach( $this->_custom_fields as $custom_field ) {
-			update_post_meta( $post_id, $custom_field['name'], $custom_field['name'] );
+			update_post_meta( $post_id, $custom_field['name'], $_POST[ $custom_field['name'] ] );
 		}
 
 		do_action( 'event_save' , $post_id );
 	}
 }
+
+endif;
+
+return new Event();
