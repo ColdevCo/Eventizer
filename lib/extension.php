@@ -3,9 +3,11 @@
 function load_extensions() {
 	$extensions = scan_extensions();
 	$enabled_extensions = unserialize( get_event_options( 'enabled_extensions' ) );
-	foreach ( $extensions as $extension ) {
-		if ( in_array( $extension[ 'Extension Name' ] , $enabled_extensions ) ) {
-			include_once( $extension[ 'path' ] );
+	if ( is_array( $enabled_extensions ) ) {
+		foreach ( $extensions as $extension ) {
+			if ( in_array( $extension[ 'Extension Name' ] , $enabled_extensions ) ) {
+				include_once( $extension[ 'path' ] );
+			}
 		}
 	}
 }
