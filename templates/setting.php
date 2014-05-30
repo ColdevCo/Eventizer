@@ -194,6 +194,7 @@ $extensions = scan_extensions();
             </div>
 
             <?php
+            $enabled_extensions = unserialize( get_event_options( 'enabled_extensions' ) );
             foreach( $extensions as $extension ) :
                   $extension[ 'slug' ] = strtolower( str_replace( ' ' , '-' , $extension[ 'Extension Name' ] ) );
             ?>
@@ -201,7 +202,7 @@ $extensions = scan_extensions();
                   <label>Ext. <?php echo $extension[ 'Extension Name' ]; ?></label>
                   <div class="ev_setting_details">
                         <p><?php echo $extension[ 'Extension Description' ]; ?></p>
-                        <input type="checkbox" name="enabled_event_extensions[]" value="<?php echo $extension[ 'Extension Name' ]; ?>" <?php echo is_array( unserialize( get_event_options( 'enabled_extensions' ) ) ) and in_array( $extension[ 'Extension Name' ] , unserialize( get_event_options( 'enabled_extensions' ) ) ) ? 'checked' : '' ?> >Enable</input>
+                        <input type="checkbox" name="enabled_event_extensions[]" value="<?php echo $extension[ 'Extension Name' ]; ?>" <?php echo ( is_array( $enabled_extensions ) and in_array( $extension[ 'Extension Name' ] , $enabled_extensions ) ) ? 'checked' : '' ?> >Enable</input>
                   </div>
             </div>      
             <?php endforeach; ?>

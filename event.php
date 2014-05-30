@@ -186,11 +186,6 @@ class Event {
 		do_action( 'event_render' );
 	}
 
-	public function load_enabled_extensions()
-	{
-		load_extensions();
-	}
-
 	public function save( $post_id )
 	{
 		if ( ! isset( $_POST['ev_details_box_nonce'] ) ) {

@@ -14,13 +14,14 @@ add_action( 'template_redirect', function(){
 
 	$wpdb->insert(  $wpdb->prefix . 'event_attendances' , 
 		array(
-			'event_id' => 23,
-			'email' => 'naufal.faruqi2010@gmail.com',
-			'first_name' => 'Naufal',
-			'last_name' => 'Faruqi',
-			'phone' => '085720230222',
-			'guest_no' => 1
-		) 
+			'event_id' 	=> $_POST[ 'ev_ticket-id' ],
+			'email' 	=> $_POST[ 'ev_ticket-email' ],
+			'first_name' => $_POST[ 'ev_ticket-first-name' ],
+			'last_name' => $_POST[ 'ev_ticket-last-name' ],
+			'phone' 	=> $_POST[ 'ev_ticket-phone' ],
+			'guest_no' 	=> $_POST[ 'ev_ticket-qty' ]
+		)
 	);
+	wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
 	exit;
 });

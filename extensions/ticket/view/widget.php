@@ -1,6 +1,28 @@
+<?php
+$args = array(
+  'post_type' => 'event',
+  'post_status' => 'publish',
+  'posts_per_page' => -1,
+  'paged'     => 1,
+  'order'     => 'ASC'
+  );
+$events = get_posts( $args );
+?>
 <div class="panel panel-default">
   <div class="panel-body">
     <form role="form" action="?process=ticket_widget" method="post">
+      <?php if ( is_page() ) : ?>
+        <div class="form-group">
+          <label for="ev_ticket-first-name">Event ID</label>
+          <select class="form-control" name="ev_ticket-id" id="ev_ticket-first-id">
+              <?php foreach ( $events as $event ) : ?>
+                <option value="<?php echo $event->ID; ?>"><?php echo $event->post_title; ?></option>
+              <?php endforeach; ?>
+          </select>
+        </div>
+      <?php else : ?>
+        <input type="hidden" name="ev_ticket-id" value="<?php the_ID(); ?>">
+      <?php endif; ?>
       <div class="form-group">
         <label for="ev_ticket-first-name">First Name</label>
         <input type="text" class="form-control" name="ev_ticket-first-name" id="ev_ticket-first-name" placeholder="First Name">
