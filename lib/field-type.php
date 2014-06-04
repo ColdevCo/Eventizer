@@ -6,9 +6,9 @@ function text( $name, $args = array() ) {
 	$label = isset( $args['label'] ) ? $args['label'] : $name;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
+	$meta_value = get_post_meta( $post->ID, $name, true );
 
-	$html = "<label for=\"{$name}\">{$label}</label>";
+	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
 	$html .= "<input
         style=\"{$style}\"
         id=\"{$name}\"
@@ -28,9 +28,9 @@ function textarea( $name, $args ) {
 	$cols  = isset( $args['cols'] ) ? $args['cols'] : 2;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
+	$meta_value = get_post_meta( $post->ID, $name, true );
 
-	$html = "<label for=\"{$name}\">{$label}</label>";
+	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
 	$html .= "<textarea
         rows=\"{$row}\"
         cols=\"{$cols}\"
@@ -47,13 +47,71 @@ function radio( $name, $args ) {
 }
 
 function checkbox( $name, $args ) {
+	global $post;
 
+	$label = isset( $args['label'] ) ? $args['label'] : $name;
+	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
+
+	$meta_value = get_post_meta( $post->ID, $name, true );
+
+	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
+	$html .= "<label>
+		<input type=\"checkbox\" id=\"{$name}\" value=\"{$meta_value}\"> Enable
+	</label>";
+
+	return $html;
 }
 
 function datepicker( $name, $args ) {
+	global $post;
 
+	$plugin_url = plugins_url( '', dirname( __FILE__ ) );
+
+	wp_enqueue_script( 'jquery-ui-datepicker' );
+	wp_enqueue_style( 'ev-jquery-style', $plugin_url . '/assets/lib/Aristo/Aristo.css' );
+	wp_enqueue_script( 'ev-main', $plugin_url . '/assets/js/ev-main.js' );
+
+	$label = isset( $args['label'] ) ? $args['label'] : $name;
+	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
+
+	$meta_value = get_post_meta( $post->ID, $name, true );
+
+	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
+	$html .= "<input
+		class=\"ev-datepicker\"
+        style=\"{$style}\"
+        id=\"{$name}\"
+        type=\"text\"
+        name=\"{$name}\"
+        value=\"{$meta_value}\" />
+        <br />";
+
+	return $html;
 }
 
-function color( $name, $args ) {
+function colorpicker( $name, $args ) {
+	global $post;
 
+	$plugin_url = plugins_url( '', dirname( __FILE__ ) );
+
+	wp_enqueue_script( 'ev-colorpicker', $plugin_url . '/assets/lib/spectrum/spectrum.js' );
+	wp_enqueue_style( 'ev-colorpicker-style', $plugin_url . '/assets/lib/spectrum/spectrum.css' );
+	wp_enqueue_script( 'ev-main', $plugin_url . '/assets/js/ev-main.js' );
+
+	$label = isset( $args['label'] ) ? $args['label'] : $name;
+	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
+
+	$meta_value = get_post_meta( $post->ID, $name, true );
+
+	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
+	$html .= "<input
+		class=\"ev-colorpicker\"
+        style=\"{$style}\"
+        id=\"{$name}\"
+        type=\"color\"
+        name=\"{$name}\"
+        value=\"{$meta_value}\" />
+        <br />";
+
+	return $html;
 }
