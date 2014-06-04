@@ -43,6 +43,8 @@ class Event {
 
 	public function __construct() {
 		add_action( 'init' , array( $this , 'init' ) );
+		do_action( 'event_init' );
+		
 		add_action( 'save_post' , array( $this , 'save' ) );
 	}
 
@@ -136,8 +138,6 @@ class Event {
 	{
 		$this->register_event_post_type();
 		$this->render();
-
-		do_action( 'event_init' );
 
 		if( is_admin() && get_option( 'Install_Event_Setting' ) == 'true' ) {
 			$this->create_event_setting_table();
