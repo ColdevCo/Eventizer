@@ -6,9 +6,9 @@ function text( $name, $args = array() ) {
 	$label = isset( $args['label'] ) ? $args['label'] : $name;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = get_post_meta( $post->ID, $name, true );
+	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
 
-	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
+	$html = "<label for=\"{$name}\">{$label}</label>";
 	$html .= "<input
         style=\"{$style}\"
         id=\"{$name}\"
@@ -28,9 +28,9 @@ function textarea( $name, $args ) {
 	$cols  = isset( $args['cols'] ) ? $args['cols'] : 2;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = get_post_meta( $post->ID, $name, true );
+	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
 
-	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
+	$html = "<label for=\"{$name}\">{$label}</label>";
 	$html .= "<textarea
         rows=\"{$row}\"
         cols=\"{$cols}\"
