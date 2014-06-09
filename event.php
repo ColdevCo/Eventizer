@@ -44,7 +44,7 @@ class Event {
 	public function __construct() {
 		add_action( 'init' , array( $this , 'init' ) );
 		do_action( 'event_init' );
-		
+
 		add_action( 'save_post' , array( $this , 'save' ) );
 	}
 
@@ -162,6 +162,9 @@ class Event {
 					break;
 				case 'textarea': 
 					$field = textarea( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
+					break;
+				case 'datepicker':
+					$field = datepicker( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
 					break;
 				default:
 					$field = text( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );

@@ -52,7 +52,7 @@ function checkbox( $name, $args ) {
 	$label = isset( $args['label'] ) ? $args['label'] : $name;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = get_post_meta( $post->ID, $name, true );
+	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
 
 	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
 	$html .= "<label>
@@ -74,7 +74,7 @@ function datepicker( $name, $args ) {
 	$label = isset( $args['label'] ) ? $args['label'] : $name;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = get_post_meta( $post->ID, $name, true );
+	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
 
 	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
 	$html .= "<input
@@ -101,7 +101,7 @@ function colorpicker( $name, $args ) {
 	$label = isset( $args['label'] ) ? $args['label'] : $name;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
 
-	$meta_value = get_post_meta( $post->ID, $name, true );
+	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
 
 	$html = "<div><label for=\"{$name}\">{$label}</label></div>";
 	$html .= "<input
