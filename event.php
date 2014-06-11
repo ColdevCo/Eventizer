@@ -36,9 +36,11 @@ if ( ! class_exists( 'Event' ) ) :
 class Event {
 	private $_supports = array( 'title', 'editor', 'thumbnail' );
 	private $_custom_fields = array(
-			array( 'name' => 'ev_date' , 'label' => 'Date' , 'type' => 'datepicker' ),
+			array( 'name' => 'ev_start_time' , 'label' => 'Start Time' , 'type' => 'datetimepicker' ),
+			array( 'name' => 'ev_end_time' , 'label' => 'End Time' , 'type' => 'datetimepicker' ),
 			array( 'name' => 'ev_price' , 'label' => 'Price' , 'type' => 'text' ),
-			array( 'name' => 'ev_location' , 'label' => 'Location' , 'type' => 'textarea' )
+			array( 'name' => 'ev_location' , 'label' => 'Location' , 'type' => 'textarea' ),
+			array( 'name' => 'ev_map' , 'label' => 'Map' , 'type' => 'gmap' )
 		);
 
 	public function __construct() {
@@ -166,6 +168,12 @@ class Event {
 				case 'datepicker':
 					$field = datepicker( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
 					break;
+				case 'datetimepicker':
+					$field = datetimepicker( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
+					break;
+				case 'gmap':
+					$field = gmap( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
+					break;
 				default:
 					$field = text( $custom_field['name'] , array( 'label' => $custom_field['label'] ) );
 			}
@@ -217,7 +225,12 @@ class Event {
 		}
 
 		foreach( $this->_custom_fields as $custom_field ) {
-			update_post_meta( $post_id, $custom_field['name'], $_POST[ $custom_field['name'] ] );
+			if ( $custom_field['type'] == 'gmap' ) {
+				update_post_meta( $post_id, $custom_field['name'] . '-lat', $_POST[ $custom_field['name'] . '-lat' ] );
+				update_post_meta( $post_id, $custom_field['name'] . '-lng', $_POST[ $custom_field['name'] . '-lng' ] );
+			} else {
+				update_post_meta( $post_id, $custom_field['name'], $_POST[ $custom_field['name'] ] );
+			}
 		}
 
 		do_action( 'event_save' , $post_id );
