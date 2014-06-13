@@ -39,13 +39,13 @@ class EventList extends WP_Widget {
 			'orderby'			=> 'meta_value',
 			'meta_query'		=> array(
 				array(
-					'key'		=> 'ev_date',
-					'value'		=> date("Y-m-d"),
+					'key'		=> 'ev_start_time',
+					'value'		=> date("Y-m-d H:i"),
 					'compare'	=> '>=',
-					'type'		=> 'DATE',
+					'type'		=> 'DATETIME',
 					),
 				),
-			'meta_key'			=> 'ev_date',
+			'meta_key'			=> 'ev_start_time',
 		);
 		$events = get_posts( $args );
 

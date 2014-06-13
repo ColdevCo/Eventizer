@@ -225,11 +225,17 @@ class Event {
 		}
 
 		foreach( $this->_custom_fields as $custom_field ) {
-			if ( $custom_field['type'] == 'gmap' ) {
-				update_post_meta( $post_id, $custom_field['name'] . '-lat', $_POST[ $custom_field['name'] . '-lat' ] );
-				update_post_meta( $post_id, $custom_field['name'] . '-lng', $_POST[ $custom_field['name'] . '-lng' ] );
-			} else {
-				update_post_meta( $post_id, $custom_field['name'], $_POST[ $custom_field['name'] ] );
+			switch ( $custom_field['type'] ) {
+				case 'datetimepicker':
+					update_post_meta( $post_id, $custom_field['name'], date( 'Y-m-d H:i', strtotime( $_POST[ $custom_field['name'] ] ) ) );
+					break;
+				case 'gmap':
+					update_post_meta( $post_id, $custom_field['name'] . '-lat', $_POST[ $custom_field['name'] . '-lat' ] );
+					update_post_meta( $post_id, $custom_field['name'] . '-lng', $_POST[ $custom_field['name'] . '-lng' ] );
+					break;
+				default:
+					update_post_meta( $post_id, $custom_field['name'], $_POST[ $custom_field['name'] ] );
+					break;
 			}
 		}
 
