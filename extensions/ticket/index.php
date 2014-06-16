@@ -46,12 +46,11 @@ class EventTicket {
 		return $ticket->quota;
 	}
 
-	public function get_ticket_max_tickets_per_person()
-	{
+	public function get_ticket_max_tickets_per_person() {
 		global $wpdb, $post;
 
 		$table_name = $wpdb->prefix . "event_tickets";
-		$ticket = $wpdb->get_row("SELECT * FROM $table_name WHERE event_id = $post->ID");
+		$ticket     = $wpdb->get_row( "SELECT * FROM $table_name WHERE event_id = $post->ID" );
 
 		return $ticket->max_tickets_per_person;
 	}
@@ -89,12 +88,12 @@ class EventTicket {
 		dbDelta( $sql );
 	}
 
-	public function render()
-	{
-		add_filter( 'add_event_fields' , function( $fields ) {
-			$fields[] = text( 'ev_ticket_name' , array( 'label' => 'Ticket Name' , 'value' =>  $this->get_ticket_name() ) );
-			$fields[] = text( 'ev_ticket_quota' , array( 'label' => 'Quota' , 'value' => $this->get_ticket_quota() ) );
-			$fields[] = text( 'ev_ticket_max_tickets_per_person' , array( 'label' => 'Max tickets per person' , 'value' => $this->get_ticket_max_tickets_per_person() ) );
+	public function render() {
+		add_filter( 'add_event_fields', function ( $fields ) {
+			$fields[] = text( 'ev_ticket_name', array( 'label' => 'Ticket Name', 'value' => $this->get_ticket_name() ) );
+			$fields[] = text( 'ev_ticket_quota', array( 'label' => 'Quota', 'value' => $this->get_ticket_quota() ) );
+			$fields[] = text( 'ev_ticket_max_tickets_per_person', array( 'label' => 'Max tickets per person', 'value' => $this->get_ticket_max_tickets_per_person() ) );
+
 			return $fields;
 		} );
 	}
