@@ -1,7 +1,7 @@
 <?php
 
 add_action( 'init', function(){
-	add_rewrite_endpoint( 'process' , EP_PERMALINK );	
+	add_rewrite_endpoint( 'process' , EP_PERMALINK );
 });
 
 add_action( 'template_redirect', function(){
@@ -12,7 +12,7 @@ add_action( 'template_redirect', function(){
 		return;
 	}
 
-	$wpdb->insert(  $wpdb->prefix . 'event_attendances' , 
+	$wpdb->insert(  $wpdb->prefix . 'event_attendances' ,
 		array(
 			'event_id' 	=> $_POST[ 'ev_ticket-id' ],
 			'email' 	=> $_POST[ 'ev_ticket-email' ],

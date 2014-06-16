@@ -1,0 +1,33 @@
+.ev-ticket-widget {
+
+}
+
+.ev-ticket-widget .event-list {
+	/*height:     170px;*/
+	overflow:   auto;
+	overflow-y: hidden;
+}
+
+.ev-ticket-widget .event-wrap {
+	height: 150px;
+	width:  auto;
+}
+
+.ev-ticket-widget .event-item {
+	cursor: pointer;
+}
+
+.ev-ticket-widget .event-item:not(:last-child) {
+	float:        left;
+	margin-right: 10px;
+}
+
+.ev-ticket-widget .event-item img {
+	margin: 2px;
+}
+
+.ev-ticket-widget .event-item.active img,
+.ev-ticket-widget .event-item img:hover {
+	border: 2px solid yellow;
+	margin: 0;
+}
