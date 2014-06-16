@@ -49,6 +49,16 @@ class EventTicket {
 		return $ticket->quota;
 	}
 
+	public function get_ticket_max_tickets_per_person()
+	{
+		global $wpdb, $post;
+
+		$table_name = $wpdb->prefix . "event_tickets";
+		$ticket = $wpdb->get_row("SELECT * FROM $table_name WHERE event_id = $post->ID");
+
+		return $ticket->max_tickets_per_person;
+	}
+
 	public function init()
 	{
 		$this->enable();
@@ -65,6 +75,7 @@ class EventTicket {
 						name tinytext DEFAULT '' NOT NULL,
 						quota int(11) DEFAULT -1 NOT NULL,
 						created_time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+						max_tickets_per_person int(11) DEFAULT 1,
 						UNIQUE KEY event_id (event_id)
 						);
 		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_attendances (
@@ -87,6 +98,7 @@ class EventTicket {
 		add_filter( 'add_event_fields' , function( $fields ) {
 			$fields[] = text( 'ev_ticket_name' , array( 'label' => 'Ticket Name' , 'value' =>  $this->get_ticket_name() ) );
 			$fields[] = text( 'ev_ticket_quota' , array( 'label' => 'Quota' , 'value' => $this->get_ticket_quota() ) );
+			$fields[] = text( 'ev_ticket_max_tickets_per_person' , array( 'label' => 'Max tickets per person' , 'value' => $this->get_ticket_max_tickets_per_person() ) );
 			return $fields;
 		} );
 	}
