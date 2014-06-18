@@ -26,6 +26,7 @@ include_once( 'lib/event_options.php' );
 include_once( 'lib/field-type.php' );
 include_once( 'lib/extension.php' );
 include_once( 'lib/widget.php' );
+include_once( 'lib/shortcodes.php' );
 
 register_activation_hook( __FILE__ , function() {
 	add_option( 'Install_Event_Setting', 'true' );	
