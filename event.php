@@ -99,7 +99,7 @@ class Event {
 			'labels'		=> array(
 				'name'			=> 'Events',
 				'singular_name'	=> 'Event',
-				'menu_name'		=> 'Event',
+				'menu_name'		=> 'Events',
 				'add_new'		=> 'Add New',
 				'add_new_item'	=> 'Add New Event',
 				'edit_item'		=> 'Edit Event',
@@ -116,6 +116,30 @@ class Event {
 		);
 		register_post_type( 'event' , $args );
 	}
+
+    public function register_event_taxonomies()
+    {
+        $event_category_labels = array(
+            'name'          => _x( 'Categories', 'taxonomy general name' ),
+            'singular_name' => _x( 'Category', 'taxonomy singular name' ),
+            'search_items'  =>  __( 'Search Categories' ),
+            'popular_items' => __( 'Popular Categories' ),
+            'all_items'     => __( 'All Categories' ),
+            'edit_item'     => __( 'Edit Category' ),
+            'update_item'   => __( 'Update Category' ),
+            'add_new_item'  => __( 'Add New Category' ),
+            'menu_name'     => __( 'Categories' ),
+        );
+        $event_category = array(
+            'hierarchical'      => true,
+            'show_ui'           => true,
+            'rewrite'           => array( 'slug' => 'event-category' ),
+            'labels'            => $event_category_labels
+        );
+
+        register_taxonomy( 'event-category', 'event', $event_category );
+        register_taxonomy( 'event-tag', 'event' );
+    }
 
 	public function create_event_setting_table()
 	{
@@ -139,6 +163,7 @@ class Event {
 	public function init()
 	{
 		$this->register_event_post_type();
+        $this->register_event_taxonomies();
 		$this->render();
 
 		if( is_admin() && get_option( 'Install_Event_Setting' ) == 'true' ) {
