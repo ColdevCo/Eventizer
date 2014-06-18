@@ -112,7 +112,8 @@ class Event {
 			'description'	=> 'Event Management',
 			'supports'		=> $this->_supports,
 			'menu_position'	=> 5,
-			'public'		=> true
+			'public'		=> true,
+			'menu_icon'		=> 'dashicons-calendar'
 		);
 		register_post_type( 'event' , $args );
 	}
@@ -209,14 +210,16 @@ class Event {
 		$fields = apply_filters( 'add_event_fields', $fields );
 
 		foreach ( $fields as $field ) {
-			echo $field;
+			// echo $field;
 		}
+
+		include 'templates/event-details-form.php';
 	}
 
 	public function render()
 	{
 		add_action( 'add_meta_boxes', function() {
-			add_meta_box( 'event-details-box', 'Detail', array( $this , 'details_form' ) , 'event', 'normal', 'low' );
+			add_meta_box( 'event-details-box', 'Event Details', array( $this , 'details_form' ) , 'event', 'normal', 'low' );
 		} );
 
 		do_action( 'event_render' );

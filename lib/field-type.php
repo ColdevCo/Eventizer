@@ -5,9 +5,7 @@ function text( $name, $args = array() ) {
 
 	$label = isset( $args['label'] ) ? $args['label'] : $name;
 	$style = isset( $args['style'] ) ? $args['style'] : 'width: 100%;';
-
-	$id 		= $args['id'] ? args['id'] : $name;
-	$className 	= $args['class'] ? $args['class'] : $name;
+	
 	$meta_value = $args['value'] ? $args['value'] : get_post_meta( $post->ID, $name, true );
 
 	$html = "<label for=\"{$name}\">{$label}</label>";

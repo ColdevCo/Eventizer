@@ -88,13 +88,15 @@ class EventTicket {
 		dbDelta( $sql );
 	}
 
-	public function render() {
-		add_filter( 'add_event_fields', function ( $fields ) {
-			$fields[] = text( 'ev_ticket_name', array( 'label' => 'Ticket Name', 'value' => $this->get_ticket_name() ) );
-			$fields[] = text( 'ev_ticket_quota', array( 'label' => 'Quota', 'value' => $this->get_ticket_quota() ) );
-			$fields[] = text( 'ev_ticket_max_tickets_per_person', array( 'label' => 'Max tickets per person', 'value' => $this->get_ticket_max_tickets_per_person() ) );
+	public function details_form() {
+		include 'view/tickets-form.php';
+	}
 
-			return $fields;
+	public function render() {
+		add_action( 'event_render', function() {
+			add_action( 'add_meta_boxes', function() {
+				add_meta_box( 'event-tickets-box', 'Event Tickets', array( $this , 'details_form' ) , 'event', 'normal', 'low' );
+			} );
 		} );
 	}
 
