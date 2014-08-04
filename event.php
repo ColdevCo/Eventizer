@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Test Event
- * Plugin URI: http://www.facebook.com
- * Description: Test Event
+ * Plugin Name: Coldev Event Management
+ * Plugin URI: http://www.coldev.co
+ * Description: Event Management Plugin developed by Coldev
  * Version: 1.0
- * Author: Me
- * Author URI: http://www.facebook.com
+ * Author: Coldev
+ * Author URI: http://www.coldev.co
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
