@@ -126,7 +126,7 @@ $post_id = $post->ID;
     $lat = explode( ',', get_post_meta( $post_id, 'ev_map', true ) )[0];
     $lng = explode( ',', get_post_meta( $post_id, 'ev_map', true ) )[1];
 
-    echo HTML::geoinput('ev_map', array('class' => 'google-map', 'data-name' => 'ev_map', 'data-marker' => $lat . ',' . $lng));
+    echo $form->geoinput('ev_map', array('class' => 'google-map', 'data-name' => 'ev_map', 'data-marker' => $lat . ',' . $lng));
     ?>
 
 </div>

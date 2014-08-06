@@ -275,17 +275,29 @@ class Event {
 		}
         */
 
+
+        $event = $_POST[ $post_id ];
+
         /* Event Date & Time */
-        update_post_meta( $post_id, 'ev_allday', $_POST[ 'ev_allday' ] );
-        update_post_meta( $post_id, 'ev_start_date', $_POST[ 'ev_start_date' ] );
-        update_post_meta( $post_id, 'ev_start_time', $_POST[ 'ev_start_time' ] );
-        update_post_meta( $post_id, 'ev_end_date', $_POST[ 'ev_end_date' ] );
-        update_post_meta( $post_id, 'ev_end_time', $_POST[ 'ev_end_time' ] );
+        $allday = $event['ev_allday'];
+        $start_date = $event['ev_start_date'];
+        $end_date   = $event['ev_end_date'];
+        $start_time = $event['ev_start_time-hour'] . ':' . $event['ev_start_time-minute'] . ' ' . $event['ev_start_time-meridiem'];
+        $end_time   = $event['ev_end_time-hour'] . ':' . $event['ev_end_time-minute'] . ' ' . $event['ev_end_time-meridiem'];
+
+        update_post_meta( $post_id, 'ev_allday', $allday );
+        update_post_meta( $post_id, 'ev_start_date', $start_date );
+        update_post_meta( $post_id, 'ev_end_date', $end_date );
+
+        update_post_meta( $post_id, 'ev_start_time', $start_time );
+        update_post_meta( $post_id, 'ev_end_time', $end_time );
 
         /* Event Location */
-        update_post_meta( $post_id, 'ev_venue_name', $_POST[ 'ev_venue_name' ] );
-        update_post_meta( $post_id, 'ev_venue_address', $_POST[ 'ev_venue_address' ] );
-        update_post_meta( $post_id, 'ev_map', $_POST[ 'ev_map-lat' ] . ',' . $_POST[ 'ev_map-lng' ] );
+        $latLng = implode( ',', array($event['ev_map-lat'], $event['ev_map-lng']) );
+
+        update_post_meta( $post_id, 'ev_venue_name', $event['ev_venue_name'] );
+        update_post_meta( $post_id, 'ev_venue_address', $event['ev_venue_address'] );
+        update_post_meta( $post_id, 'ev_map', $latLng );
 
 
 		do_action( 'event_save' , $post_id );

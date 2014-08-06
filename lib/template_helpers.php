@@ -296,12 +296,12 @@ class Form
             $value = array('lat' => '', 'lng' => '');
         }
 
-        $attributes = self::attributes( $_attributes );
+        $attributes = HTML::attributes( $_attributes );
 
         $html = "";
         $html .= "<div id='map-{$name}' {$attributes}></div>";
-        $html .= self::hidden( $name . '-lat', $value['lat'] );
-        $html .= self::hidden( $name . '-lng', $value['lng'] );
+        $html .= HTML::hidden( $this->post_id . "[{$name}-lat]" , $value['lat'] );
+        $html .= HTML::hidden( $this->post_id . "[{$name}-lng]", $value['lng'] );
 
         return $html;
     }
