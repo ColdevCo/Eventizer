@@ -8,7 +8,7 @@ class HTML
         return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
     }
 
-    private static function attributes( $attributes )
+    public static function attributes( $attributes )
     {
         $attr = array();
 
@@ -25,7 +25,7 @@ class HTML
         return count($attr) > 0 ? ' '.implode(' ', $attr) : '';
     }
 
-    private static function safe_string( $string )
+    public static function safe_string( $string )
     {
         $string = str_replace( " ", "-", $string );
         return strtolower( $string );
@@ -55,9 +55,12 @@ class HTML
 
     public static function textarea( $name, $_attributes = array() )
     {
+        $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : '';
+        unset($_attributes['value']);
+
         $attributes = self::attributes( $_attributes );
 
-        $html = "<textarea name='{$name}' {$attributes}></textarea>";
+        $html = "<textarea name='{$name}' {$attributes}>{$value}</textarea>";
         return $html;
     }
 
@@ -102,6 +105,7 @@ class HTML
     public static function datepicker( $name, $options = array() )
     {
         wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_style( 'ev-jquery-style', plugins_url( '', dirname( __FILE__ ) ) . '/assets/lib/Aristo/Aristo.css' );
 
         if( array_key_exists( 'class', $options ) ) {
             $options['class'] = 'datepicker ' . $options['class'];
@@ -110,13 +114,16 @@ class HTML
         }
 
         $html = "";
-        $html .= self::text( $name . '-date', $options );
+        $html .= self::text( $name, $options );
 
         return $html;
     }
 
     public static function timepicker( $name, $options = array() )
     {
+        $value = array_key_exists( 'value', $options ) ? $options['value'] : array();
+        unset($options['value']);
+
         $attributes = self::attributes( $options );
 
         $hours = array();
@@ -126,10 +133,10 @@ class HTML
         for ($i = 0; $i <= 59; $minutes[$i] = sprintf("%02s", $i), $i++);
 
         $html = "<div {$attributes}>";
-        $html .= self::dropdown( $name . '-hour', $hours );
+        $html .= self::dropdown( $name . '-hour', $hours, array('value' => $value['hour']) );
         $html .= "&nbsp; : &nbsp;";
-        $html .= self::dropdown( $name . '-minute', $minutes );
-        $html .= self::dropdown( $name . '-ampm', array('AM', 'PM') );
+        $html .= self::dropdown( $name . '-minute', $minutes, array('value' => $value['minute']) );
+        $html .= self::dropdown( $name . '-meridiem', array('AM', 'PM'), array('value' => $value['meridiem']) );
         $html .= "</div>";
 
         return $html;
@@ -146,12 +153,155 @@ class HTML
 
     public static function geoinput( $name, $_attributes = array() )
     {
+        $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : array();
+        unset($_attributes['value']);
+
         $attributes = self::attributes( $_attributes );
 
         $html = "";
         $html .= "<div id='map-{$name}' {$attributes}></div>";
-        $html .= self::hidden( $name . '-lat', '' );
-        $html .= self::hidden( $name . '-lng', '' );
+        $html .= self::hidden( $name . '-lat', $value['lat'] );
+        $html .= self::hidden( $name . '-lng', $value['lng'] );
+
+        return $html;
+    }
+}
+
+class Form
+{
+
+    public $post_id;
+
+    function __construct( $post_id = NULL )
+    {
+        $this->post_id = $post_id;
+    }
+
+    public function open( $action, $_attributes = array() )
+    {
+        $method = array_key_exists( 'method', $_attributes ) ? $_attributes['method'] : 'post';
+        return "<form action='{$action}' method='{$method}'>";
+    }
+
+    public function close()
+    {
+        return "</form>";
+    }
+
+    public function text( $name, $_attributes = array() )
+    {
+        $value = get_post_meta( $this->post_id, $name, true );
+
+        if( empty($value) )
+            $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : '';
+
+        if( ! empty($value) )
+            $_attributes['value'] = $value;
+
+        $name = $this->post_id . "[{$name}]";
+
+        return HTML::text( $name, $_attributes);
+    }
+
+    public function textarea( $name, $_attributes = array() )
+    {
+        $value = get_post_meta( $this->post_id, $name, true );
+
+        if( empty($value) )
+            $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : '';
+
+        if( ! empty($value) )
+            $_attributes['value'] = $value;
+
+        $name = $this->post_id . "[{$name}]";
+
+        return HTML::textarea( $name, $_attributes);
+    }
+
+    public function radio( $text, $name, $_attributes = array() )
+    {
+        $value = HTML::safe_string($text);
+
+        $checked = get_post_meta( $this->post_id, $name, true );
+        if( ! empty($checked) )
+            $_attributes['checked'] = true;
+
+        if( ! empty($value) && ! empty($checked) && $value !== $checked )
+            unset( $_attributes['checked'] );
+
+        $name = $this->post_id . "[{$name}]";
+
+        return HTML::radio( $text, $name, $_attributes);
+    }
+
+    public function datepicker( $name, $_options )
+    {
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_style( 'ev-jquery-style', plugins_url( '', dirname( __FILE__ ) ) . '/assets/lib/Aristo/Aristo.css' );
+
+        if( array_key_exists( 'class', $_options ) ) {
+            $_options['class'] = 'datepicker ' . $_options['class'];
+        } else {
+            $_options['class'] = 'datepicker';
+        }
+
+        $attributes = $_options;
+
+        return self::text( $name, $attributes );
+    }
+
+    public function timepicker( $name, $_options )
+    {
+        $format = array_key_exists( 'format', $_options ) ? $_options['format'] : 12;
+        unset( $_options['format'] );
+
+        $hours = array();
+        for ($i = 1; $i <= $format; $hours[$i] = sprintf("%02s", $format === 12 ? $i : $i - 1), $i++);
+
+        $minutes = array();
+        for ($i = 0; $i <= 59; $minutes[$i] = sprintf("%02s", $i), $i++);
+
+        $value = array_key_exists( 'value', $_options ) ? $_options['value'] : array();
+        unset( $_options['value'] );
+
+        if( ! is_array($value) || empty($value) ) {
+            $value = array('hour' => 0, 'minute' => 0, 'meridiem' => '');
+        }
+
+        $time = get_post_meta( $this->post_id, $name, true );
+        preg_match('/(?<hour>\d+):(?<minute>\d+) (?<meridiem>\w+)/', $time, $matches);
+
+        if( ! empty($matches) ) {
+            $value = array('hour' => $matches['hour'], 'minute' => $matches['minute'], 'meridiem' => $matches['meridiem']);
+        }
+
+        $attributes = HTML::attributes( $_options );
+
+        $hour = HTML::dropdown( $this->post_id . "[{$name}-hour]", $hours, array( 'value' => $value['hour'] ) );
+        $minute = HTML::dropdown( $this->post_id . "[{$name}-minute]", $minutes, array( 'value' => $value['minute'] ) );
+        $meridiem = HTML::dropdown( $this->post_id . "[{$name}-meridiem]", array('AM', 'PM'), array( 'value' => $value['meridiem'] ) );
+
+        if( $format === 12 )
+            return "<div {$attributes}>{$hour}&nbsp; : &nbsp;{$minute} {$meridiem}</div>";
+        else
+            return "<div {$attributes}>{$hour}&nbsp; : &nbsp;{$minute}</div>";
+    }
+
+    public function geoinput( $name, $_attributes )
+    {
+        $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : array();
+        unset($_attributes['value']);
+
+        if( ! is_array($value) || empty($value) ) {
+            $value = array('lat' => '', 'lng' => '');
+        }
+
+        $attributes = self::attributes( $_attributes );
+
+        $html = "";
+        $html .= "<div id='map-{$name}' {$attributes}></div>";
+        $html .= self::hidden( $name . '-lat', $value['lat'] );
+        $html .= self::hidden( $name . '-lng', $value['lng'] );
 
         return $html;
     }

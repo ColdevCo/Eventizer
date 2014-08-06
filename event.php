@@ -37,6 +37,7 @@ if ( ! class_exists( 'Event' ) ) :
 
 class Event {
 	private $_supports = array( 'title', 'editor', 'thumbnail' );
+    /*
 	private $_custom_fields = array(
 			array( 'name' => 'ev_start_time' , 'label' => 'Start Time' , 'type' => 'datetimepicker' ),
 			array( 'name' => 'ev_end_time' , 'label' => 'End Time' , 'type' => 'datetimepicker' ),
@@ -44,6 +45,7 @@ class Event {
 			array( 'name' => 'ev_location' , 'label' => 'Location' , 'type' => 'textarea' ),
 			array( 'name' => 'ev_map' , 'label' => 'Map' , 'type' => 'gmap' )
 		);
+    */
 
 	public function __construct() {
 		add_action( 'init' , array( $this , 'init' ) );
@@ -183,6 +185,9 @@ class Event {
 	{
 		wp_nonce_field( 'ev_details_box', 'ev_details_box_nonce' );
 
+        include 'templates/event-details-form.php';
+
+        /*
 		$fields   = array();
 		foreach( $this->_custom_fields as $custom_field ) {
 			$field = '';
@@ -214,8 +219,7 @@ class Event {
 		foreach ( $fields as $field ) {
 			// echo $field;
 		}
-
-		include 'templates/event-details-form.php';
+        */
 	}
 
 	public function render()
@@ -254,6 +258,7 @@ class Event {
 			}
 		}
 
+        /*
 		foreach( $this->_custom_fields as $custom_field ) {
 			switch ( $custom_field['type'] ) {
 				case 'datetimepicker':
@@ -268,6 +273,20 @@ class Event {
 					break;
 			}
 		}
+        */
+
+        /* Event Date & Time */
+        update_post_meta( $post_id, 'ev_allday', $_POST[ 'ev_allday' ] );
+        update_post_meta( $post_id, 'ev_start_date', $_POST[ 'ev_start_date' ] );
+        update_post_meta( $post_id, 'ev_start_time', $_POST[ 'ev_start_time' ] );
+        update_post_meta( $post_id, 'ev_end_date', $_POST[ 'ev_end_date' ] );
+        update_post_meta( $post_id, 'ev_end_time', $_POST[ 'ev_end_time' ] );
+
+        /* Event Location */
+        update_post_meta( $post_id, 'ev_venue_name', $_POST[ 'ev_venue_name' ] );
+        update_post_meta( $post_id, 'ev_venue_address', $_POST[ 'ev_venue_address' ] );
+        update_post_meta( $post_id, 'ev_map', $_POST[ 'ev_map-lat' ] . ',' . $_POST[ 'ev_map-lng' ] );
+
 
 		do_action( 'event_save' , $post_id );
 	}
