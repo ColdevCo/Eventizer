@@ -24,6 +24,7 @@ define( '__EVENT_WIDGET_URL__' , plugins_url() . '/widgets/' );
 
 include_once( 'lib/event_options.php' );
 include_once( 'lib/field-type.php' );
+include_once( 'lib/template_helpers.php' );
 include_once( 'lib/extension.php' );
 include_once( 'lib/widget.php' );
 include_once( 'lib/shortcodes.php' );
