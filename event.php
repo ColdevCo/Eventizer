@@ -293,11 +293,11 @@ class Event {
         update_post_meta( $post_id, 'ev_end_time', $end_time );
 
         /* Event Location */
-        $latLng = implode( ',', array($event['ev_map-lat'], $event['ev_map-lng']) );
+        $latLng = implode( ',', array($event['ev_venue_location-lat'], $event['ev_venue_location-lng']) );
 
         update_post_meta( $post_id, 'ev_venue_name', $event['ev_venue_name'] );
         update_post_meta( $post_id, 'ev_venue_address', $event['ev_venue_address'] );
-        update_post_meta( $post_id, 'ev_map', $latLng );
+        update_post_meta( $post_id, 'ev_venue_location', $latLng );
 
 
 		do_action( 'event_save' , $post_id );

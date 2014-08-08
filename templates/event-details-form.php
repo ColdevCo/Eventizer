@@ -60,7 +60,7 @@ $post_id = $post->ID;
 
     #ev_venue_name,
     #ev_venue_address,
-    .google-map {
+    #ev_venue_location {
         width: 400px;
     }
 
@@ -68,7 +68,7 @@ $post_id = $post->ID;
         height: 80px;
     }
 
-    .google-map {
+    #ev_venue_location {
         height: 200px;
     }
 </style>
@@ -82,6 +82,15 @@ $post_id = $post->ID;
     <?= $form->radio('Yes', 'ev_allday', array('class' => 'input-ev_allday')); ?>
     <?= $form->radio('No', 'ev_allday', array('class' => 'input-ev_allday', 'checked' => true)); ?>
 
+    <?php
+    $hidden = '';
+    $allday = get_post_meta( $post_id, 'ev_allday', true );
+
+    if ( $allday != '' && $allday == 'yes' ) {
+        $hidden = ' hidden';
+    }
+    ?>
+
 </div>
 
 <div class="input-group">
@@ -89,7 +98,7 @@ $post_id = $post->ID;
     <?= HTML::label('Start date &amp; time', 'ev_start_date', array('class' => 'label-ev_start_date left')); ?>
 
     <?= $form->datepicker('ev_start_date', array('class' => 'datepicker', 'id' => 'ev_start_date')); ?>
-    <?= $form->timepicker('ev_start_time', array('class' => 'timepicker input-ev_start_time' )); ?>
+    <?= $form->timepicker('ev_start_time', array('class' => 'timepicker input-ev_start_time' . $hidden)); ?>
 
 </div>
 
@@ -98,7 +107,8 @@ $post_id = $post->ID;
     <?= HTML::label('End date &amp; time', 'ev_end_date', array('class' => 'label-ev_end_date left')); ?>
 
     <?= $form->datepicker('ev_end_date', array('class' => 'datepicker', 'id' => 'ev_end_date')); ?>
-    <?= $form->timepicker('ev_end_time', array('class' => 'timepicker input-ev_end_time')); ?>
+    <?= $form->timepicker('ev_end_time', array('class' => 'timepicker input-ev_end_time' . $hidden)); ?>
+
 </div>
 
 <hr class="input-divider" />
@@ -120,18 +130,13 @@ $post_id = $post->ID;
 <div class="input-group last">
 
     <?= HTML::label('Venue Location', 'ev_venue_location', array('class' => 'label-ev_venue_location left')); ?>
-
-    <?php
-
-    $lat = explode( ',', get_post_meta( $post_id, 'ev_map', true ) )[0];
-    $lng = explode( ',', get_post_meta( $post_id, 'ev_map', true ) )[1];
-
-    echo $form->geoinput('ev_map', array('class' => 'google-map', 'data-name' => 'ev_map', 'data-marker' => $lat . ',' . $lng));
-    ?>
+    <?= $form->geoinput('ev_venue_location', array('class' => 'google-map')); ?>
 
 </div>
 
 <script type="text/javascript">
+
+    var map_selector = '#ev_venue_location';
 
     var map;
     var markers = [];
@@ -191,9 +196,8 @@ $post_id = $post->ID;
             map: map
         });
 
-        var name = jQuery( '#map-ev_map' ).attr( 'data-name' );
-        jQuery( 'input[name=' + name + '-lat]' ).val( location.lat() );
-        jQuery( 'input[name=' + name + '-lng]' ).val( location.lng() );
+        jQuery( '#ev_venue_location-lat' ).val( location.lat() );
+        jQuery( '#ev_venue_location-lng' ).val( location.lng() );
 
         markers.push( marker );
     }
@@ -214,12 +218,12 @@ $post_id = $post->ID;
             zoom: 10,
             scrollwheel: false
         };
-        map = new google.maps.Map(document.getElementById( "map-ev_map" ), mapOptions);
+        map = new google.maps.Map(document.getElementById( "ev_venue_location" ), mapOptions);
         geocoder = new google.maps.Geocoder();
 
-        if ( jQuery( '#map-ev_map' ).attr( 'data-marker' ) != ',' ) {
-            var markerLat = jQuery( '#map-ev_map' ).attr( 'data-marker' ).split(',')[0];
-            var markerLng = jQuery( '#map-ev_map' ).attr( 'data-marker' ).split(',')[1];
+        if ( jQuery( '#ev_venue_location-lat' ).val() != '' && jQuery( '#ev_venue_location-lng' ).val() != '' ) {
+            var markerLat = jQuery( '#ev_venue_location-lat' ).val();
+            var markerLng = jQuery( '#ev_venue_location-lng' ).val();
             var markerLocation = new google.maps.LatLng( markerLat, markerLng );
 
             add_marker( markerLocation );

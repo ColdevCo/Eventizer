@@ -39,9 +39,12 @@ class HTML
         return $html;
     }
 
-    public static function hidden( $name, $value )
+    public static function hidden( $name, $value, $_attributes = array() )
     {
-        $html = "<input type='hidden' name='{$name}' value='{$value}' />";
+        unset($_attributes['value']);
+        $attributes = self::attributes( $_attributes );
+
+        $html = "<input type='hidden' name='{$name}' {$attributes} value='{$value}' />";
         return $html;
     }
 
@@ -80,6 +83,9 @@ class HTML
 
     public static function dropdown( $name, $options = array(), $_attributes = array() )
     {
+        $selected = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : '';
+        unset($_attributes['value']);
+
         $attributes = self::attributes( $_attributes );
 
         $html = "<select name='{$name}' {$attributes}>";
@@ -90,11 +96,11 @@ class HTML
             if ( is_array($value) ) {
                 $html .= "<optgroup label='{$key}'>";
                 foreach ( $value as $k => $v ) {
-                    $html .= "<option value='{$k}'>{$v}</option>";
+                    $html .= "<option value='{$k}' " . (($k == $selected) ? 'selected' : '') . ">{$v}</option>";
                 }
                 $html .= "</optgroup>";
             } else {
-                $html .= "<option value='{$key}'>{$value}</option>";
+                $html .= "<option value='{$key}' " . (($key == $selected) ? 'selected' : '') . ">{$value}</option>";
             }
         }
         $html .= "</select>";
@@ -256,10 +262,10 @@ class Form
         unset( $_options['format'] );
 
         $hours = array();
-        for ($i = 1; $i <= $format; $hours[$i] = sprintf("%02s", $format === 12 ? $i : $i - 1), $i++);
+        for ($i = 1; $i <= $format; $hours[sprintf("%02s", $i)] = sprintf("%02s", $format === 12 ? $i : $i - 1), $i++);
 
         $minutes = array();
-        for ($i = 0; $i <= 59; $minutes[$i] = sprintf("%02s", $i), $i++);
+        for ($i = 0; $i <= 59; $minutes[sprintf("%02s", $i)] = sprintf("%02s", $i), $i++);
 
         $value = array_key_exists( 'value', $_options ) ? $_options['value'] : array();
         unset( $_options['value'] );
@@ -287,7 +293,7 @@ class Form
             return "<div {$attributes}>{$hour}&nbsp; : &nbsp;{$minute}</div>";
     }
 
-    public function geoinput( $name, $_attributes )
+    public function geoinput( $name, $_attributes = array() )
     {
         $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : array();
         unset($_attributes['value']);
@@ -296,12 +302,20 @@ class Form
             $value = array('lat' => '', 'lng' => '');
         }
 
+        $latLng = get_post_meta( $this->post_id, $name, true );
+        if( $latLng )
+        {
+            $lat = explode( ',', $latLng )[0];
+            $lng = explode( ',', $latLng )[1];
+            $value = array('lat' => $lat, 'lng' => $lng);
+        }
+
         $attributes = HTML::attributes( $_attributes );
 
         $html = "";
-        $html .= "<div id='map-{$name}' {$attributes}></div>";
-        $html .= HTML::hidden( $this->post_id . "[{$name}-lat]" , $value['lat'] );
-        $html .= HTML::hidden( $this->post_id . "[{$name}-lng]", $value['lng'] );
+        $html .= "<div id='{$name}' {$attributes}></div>";
+        $html .= HTML::hidden( $this->post_id . "[{$name}-lat]" , $value['lat'], array('id' => "{$name}-lat") );
+        $html .= HTML::hidden( $this->post_id . "[{$name}-lng]", $value['lng'], array('id' => "{$name}-lng") );
 
         return $html;
     }
