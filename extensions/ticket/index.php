@@ -64,6 +64,8 @@ class EventTicket {
 	public function enable() {
 		global $wpdb;
 
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
 		$sql = "
 		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_tickets (
 						event_id int(11) NOT NULL,
@@ -72,8 +74,11 @@ class EventTicket {
 						created_time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 						max_tickets_per_person int(11) DEFAULT 1,
 						UNIQUE KEY event_id (event_id)
-						);
-		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_attendances (
+						)";
+        dbDelta( $sql );
+
+        $sql = "
+		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_attendees (
 						id int(11) AUTO_INCREMENT,
 						event_id int(11) NOT NULL,
 						email tinytext DEFAULT '' NOT NULL,
@@ -83,8 +88,6 @@ class EventTicket {
 						guest_no int(3),
 						UNIQUE KEY id (id)
 						)";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 	}
 

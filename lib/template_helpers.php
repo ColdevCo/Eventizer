@@ -81,6 +81,20 @@ class HTML
         return $html;
     }
 
+    public static function checkbox( $text, $name, $_attributes = array() )
+    {
+        $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : self::safe_string( $text );
+        $checked = array_key_exists( 'checked', $_attributes ) ? 'checked=' . $_attributes['checked'] : '';
+
+        unset($_attributes['value']);
+        unset($_attributes['checked']);
+
+        $attributes = self::attributes( $_attributes );
+
+        $html = "<label {$attributes}><input type='checkbox' name='{$name}' value='{$value}' {$checked} />{$text}</label>";
+        return $html;
+    }
+
     public static function dropdown( $name, $options = array(), $_attributes = array() )
     {
         $selected = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : '';
@@ -240,7 +254,23 @@ class Form
         return HTML::radio( $text, $name, $_attributes);
     }
 
-    public function datepicker( $name, $_options )
+    public function checkbox( $text, $name, $_attributes = array() )
+    {
+        $value = HTML::safe_string($text);
+
+        $checked = get_post_meta( $this->post_id, $name, true );
+        if( ! empty($checked) )
+            $_attributes['checked'] = true;
+
+        if( ! empty($value) && ! empty($checked) && $value !== $checked )
+            unset( $_attributes['checked'] );
+
+        $name = $this->post_id . "[{$name}]";
+
+        return HTML::checkbox( $text, $name, $_attributes);
+    }
+
+    public function datepicker( $name, $_options = array() )
     {
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_style( 'ev-jquery-style', plugins_url( '', dirname( __FILE__ ) ) . '/assets/lib/Aristo/Aristo.css' );
@@ -256,7 +286,7 @@ class Form
         return self::text( $name, $attributes );
     }
 
-    public function timepicker( $name, $_options )
+    public function timepicker( $name, $_options = array() )
     {
         $format = array_key_exists( 'format', $_options ) ? $_options['format'] : 12;
         unset( $_options['format'] );
