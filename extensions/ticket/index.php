@@ -123,8 +123,8 @@ class EventTicket {
 
 	public function register_ticket_page() {
 		add_action( 'admin_menu', function () {
-			add_submenu_page( 'edit.php?post_type=event', 'Attendant', 'Attendant', 'manage_options', 'ticket-attendant', function () {
-				include_once( 'view/ticket-manager.php' );
+			add_submenu_page( 'edit.php?post_type=event', 'Attendees', 'Attendees', 'manage_options', 'event-attendees', function () {
+				include_once( 'view/attendees.php' );
 			} );
 		} );
 	}

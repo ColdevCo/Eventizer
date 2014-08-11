@@ -12,7 +12,7 @@ add_action( 'template_redirect', function(){
 		return;
 	}
 
-	$wpdb->insert(  $wpdb->prefix . 'event_attendances' ,
+	$wpdb->insert(  $wpdb->prefix . 'event_attendees' ,
 		array(
 			'event_id' 	=> $_POST[ 'ev_ticket-id' ],
 			'email' 	=> $_POST[ 'ev_ticket-email' ],
