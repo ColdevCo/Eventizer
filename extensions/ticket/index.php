@@ -19,13 +19,27 @@ class EventTicket {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . "event_tickets";
-		$wpdb->insert( $table_name,
-			array(
-				'event_id' => $post_id,
-				'name'     => $_POST['ev_ticket_name'],
-				'quota'    => $_POST['ev_ticket_quota']
-			)
-		);
+
+        update_post_meta( $post_id, 'ev_using_tickets', $_POST[$post_id]['ev_using_tickets'] );
+
+        $wpdb->delete( $table_name, array( 'event_id' => $post_id ), array( '%d' ) );
+
+        $tickets = $_POST['ticket'];
+        foreach( $tickets as $ticket ) {
+
+            $wpdb->insert( $table_name,
+                array(
+                    'event_id' => $post_id,
+                    'name'     => $ticket['name'],
+                    'start_sell_date' => $ticket['start_sell_date'],
+                    'stop_sell_date'  => $ticket['stop_sell_date'],
+                    'min_buy' => $ticket['min_buy'],
+                    'max_buy' => $ticket['max_buy'],
+                    'quota'   => $ticket['quantity'],
+                    'price'   => $ticket['price']
+                )
+            );
+        }
 	}
 
 	public function get_ticket_name() {
@@ -68,12 +82,16 @@ class EventTicket {
 
 		$sql = "
 		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_tickets (
+		                id int(11) NOT NULL AUTO_INCREMENT,
 						event_id int(11) NOT NULL,
 						name tinytext DEFAULT '' NOT NULL,
+						start_sell_date char(100),
+						stop_sell_date char(100),
+						min_buy int(11) DEFAULT 1 NOT NULL,
+						max_buy int(11)DEFAULT 1 NOT NULL,
 						quota int(11) DEFAULT -1 NOT NULL,
-						created_time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-						max_tickets_per_person int(11) DEFAULT 1,
-						UNIQUE KEY event_id (event_id)
+						price int(11) DEFAULT 0 NOT NULL,
+						UNIQUE KEY id (id)
 						)";
         dbDelta( $sql );
 

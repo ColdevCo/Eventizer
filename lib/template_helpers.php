@@ -122,6 +122,14 @@ class HTML
         return $html;
     }
 
+    public static function button( $name, $_attributes = array() )
+    {
+        $attributes = self::attributes( $_attributes );
+
+        $html = "<button {$attributes}>{$name}</button>";
+        return $html;
+    }
+
     public static function datepicker( $name, $options = array() )
     {
         wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -240,7 +248,7 @@ class Form
 
     public function radio( $text, $name, $_attributes = array() )
     {
-        $value = HTML::safe_string($text);
+        $value = array_key_exists( 'value', $_attributes ) ? $_attributes['value'] : HTML::safe_string($text);
 
         $checked = get_post_meta( $this->post_id, $name, true );
         if( ! empty($checked) )

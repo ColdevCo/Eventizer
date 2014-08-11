@@ -299,7 +299,6 @@ class Event {
         update_post_meta( $post_id, 'ev_venue_address', $event['ev_venue_address'] );
         update_post_meta( $post_id, 'ev_venue_location', $latLng );
 
-
 		do_action( 'event_save' , $post_id );
 	}
 }
