@@ -42,11 +42,39 @@ class EventTicket {
         }
 	}
 
-	public function get_ticket_name() {
-		global $wpdb, $post;
+    public static function get_attendees( $filter = array(), $page = 1 ) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . "event_attendees";
+
+        $filters = array();
+        if ( is_array($filter) and ! empty($filter) ) {
+            foreach ( $filter as $key => $value ) {
+
+                if ( ! is_array( $value ) ) {
+                    array_push( $filters, "`{$key}` LIKE '%{$value}%'");
+                }
+
+                if ( is_array( $value ) and ! empty( $value ) ) {
+                    array_push( $filters, "`{$key}` IN (" . implode(',', $value) . ")");
+                }
+            }
+        }
+
+        $sql = "SELECT * FROM {$table_name}";
+        $sql .= empty($filters) ? '' : " WHERE " . implode(' AND ', $filters);
+        $sql .= " LIMIT " . (($page - 1) * 20) . ",20";
+
+        $attendees = $wpdb->get_results( $sql );
+
+        return $attendees;
+    }
+
+	public static function get_ticket_name( $ticket_id ) {
+		global $wpdb;
 
 		$table_name = $wpdb->prefix . "event_tickets";
-		$ticket     = $wpdb->get_row( "SELECT * FROM $table_name WHERE event_id = $post->ID" );
+		$ticket     = $wpdb->get_row( "SELECT * FROM {$table_name} WHERE `id` = {$ticket_id}" );
 
 		return $ticket->name;
 	}
@@ -98,12 +126,12 @@ class EventTicket {
         $sql = "
 		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_attendees (
 						id int(11) AUTO_INCREMENT,
-						event_id int(11) NOT NULL,
 						email tinytext DEFAULT '' NOT NULL,
-						first_name tinytext DEFAULT '' NOT NULL,
-						last_name tinytext DEFAULT '' NOT NULL,
+						name tinytext DEFAULT '' NOT NULL,
 						phone tinytext DEFAULT '' NOT NULL,
-						guest_no int(3),
+						event_id int(11) NOT NULL,
+						ticket_id int(11) NOT NULL,
+						quantity int(11),
 						UNIQUE KEY id (id)
 						)";
 		dbDelta( $sql );
