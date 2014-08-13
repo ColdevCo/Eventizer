@@ -135,6 +135,10 @@ class EventTicket {
 						UNIQUE KEY id (id)
 						)";
 		dbDelta( $sql );
+
+        if ( get_event_options( 'widget_ticket_featured_event' ) == '' ) {
+            add_event_options( 'widget_ticket_featured_event', 'upcoming' );
+        }
 	}
 
 	public function details_form() {

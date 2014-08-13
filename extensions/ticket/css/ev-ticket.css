@@ -1,33 +1,50 @@
-.ev-ticket-widget {
+/* ######################### Widget Ticket ######################## */
 
+#cem-ticket-widget {
+    background-color: #f3f3f7;
+    padding: 10px;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
-.ev-ticket-widget .event-list {
-	/*height:     170px;*/
-	overflow:   auto;
-	overflow-y: hidden;
+#cem-ticket-widget .cem-event-thumbnail {
+    display: block;
+    margin-bottom: 5px;
+    text-align: center;
 }
 
-.ev-ticket-widget .event-wrap {
-	height: 150px;
-	width:  auto;
+#cem-ticket-widget .cem-event-thumbnail > img {
+    max-width: 100%;
+    height: auto;
 }
 
-.ev-ticket-widget .event-item {
-	cursor: pointer;
+#cem-ticket-widget .input-group:not(:first-child) {
+    margin-top: 7px;
 }
 
-.ev-ticket-widget .event-item:not(:last-child) {
-	float:        left;
-	margin-right: 10px;
+#cem-ticket-widget .input-group:last-child {
+    margin-top: 20px;
 }
 
-.ev-ticket-widget .event-item img {
-	margin: 2px;
+#cem-ticket-widget .input-group > * {
+    display: block;
+    width: 100%;
 }
 
-.ev-ticket-widget .event-item.active img,
-.ev-ticket-widget .event-item img:hover {
-	border: 2px solid yellow;
-	margin: 0;
+#cem-ticket-widget .input-group > label {
+    cursor: pointer;
 }
+
+#cem-ticket-widget .input-group > button {
+    width: auto;
+    display: inline-block;
+    padding: 10px 45px;
+}
+
+#cem-ticket-widget hr {
+    margin: 30px 2px 20px;
+}
+
+/* ###################### END OF Widget Ticket ###################### */

@@ -36,7 +36,7 @@ register_activation_hook( __FILE__ , function() {
 if ( ! class_exists( 'Event' ) ) :
 
 class Event {
-	private $_supports = array( 'title', 'editor', 'thumbnail' );
+	private $_supports = array( 'title', 'editor', 'excerpt', 'thumbnail' );
     /*
 	private $_custom_fields = array(
 			array( 'name' => 'ev_start_time' , 'label' => 'Start Time' , 'type' => 'datetimepicker' ),

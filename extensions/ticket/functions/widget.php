@@ -36,6 +36,26 @@ class TicketWidget extends WP_Widget {
 	 */
 	public function form( $instance )
 	{
+
+        $featured_option = $instance[ 'widget_ticket_featured_event' ];
+
+        if ( $featured_option == '' ) {
+            $featured_option = get_event_options( 'widget_ticket_featured_event' );
+        }
+
+        $upcoming_options = $random_options = $select_options = array();
+
+        switch ( $featured_option ) {
+            case 'upcoming':
+                $upcoming_options['checked'] = true;
+                break;
+            case 'random':
+                $random_options['checked'] = true;
+                break;
+            default:
+                $select_options['checked'] = true;
+        }
+
 		include( __EVENT_EXTENSION_PATH__ . '/ticket/view/backend-form.php' );
 	}
 
@@ -51,6 +71,10 @@ class TicketWidget extends WP_Widget {
 	 */
 	public function update( $new_instance , $old_instance )
 	{
-		return;
+        $instance[ 'widget_ticket_featured_event' ] = $new_instance[ 'widget_ticket_featured_event' ];
+
+        update_event_options( 'widget_ticket_featured_event', $instance[ 'widget_ticket_featured_event' ] );
+
+        return $instance;
 	}
 }

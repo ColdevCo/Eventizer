@@ -12,14 +12,22 @@ add_action( 'template_redirect', function(){
 		return;
 	}
 
+    $name   = $_POST[ 'cem_widget_ticket-name' ];
+    $email  = $_POST[ 'cem_widget_ticket-email' ];
+    $phone  = $_POST[ 'cem_widget_ticket-phone' ];
+
+    $event_id   = $_POST[ 'cem_widget_ticket-event_id' ];
+    $ticket_id  = $_POST[ 'cem_widget_ticket-ticket_id' ];
+    $quantity   = $_POST[ 'cem_widget_ticket-quantity' ];
+
 	$wpdb->insert(  $wpdb->prefix . 'event_attendees' ,
 		array(
-			'event_id' 	=> $_POST[ 'ev_ticket-id' ],
-			'email' 	=> $_POST[ 'ev_ticket-email' ],
-			'first_name' => $_POST[ 'ev_ticket-first-name' ],
-			'last_name' => $_POST[ 'ev_ticket-last-name' ],
-			'phone' 	=> $_POST[ 'ev_ticket-phone' ],
-			'guest_no' 	=> $_POST[ 'ev_ticket-qty' ]
+            'name'      => $name,
+			'email' 	=> $email,
+			'phone' 	=> $phone,
+            'event_id' 	=> $event_id,
+            'ticket_id' => $ticket_id,
+			'quantity' 	=> $quantity
 		)
 	);
 	wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
