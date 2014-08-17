@@ -286,8 +286,8 @@ class Event {
         $end_time   = $event['ev_end_time-hour'] . ':' . $event['ev_end_time-minute'] . ' ' . $event['ev_end_time-meridiem'];
 
         update_post_meta( $post_id, 'ev_allday', $allday );
-        update_post_meta( $post_id, 'ev_start_date', $start_date );
-        update_post_meta( $post_id, 'ev_end_date', $end_date );
+        update_post_meta( $post_id, 'ev_start_date', date('Y-m-d', strtotime($start_date)) );
+        update_post_meta( $post_id, 'ev_end_date', date('Y-m-d', strtotime($end_date)) );
 
         update_post_meta( $post_id, 'ev_start_time', $start_time );
         update_post_meta( $post_id, 'ev_end_time', $end_time );

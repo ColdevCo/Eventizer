@@ -289,9 +289,17 @@ class Form
             $_options['class'] = 'datepicker';
         }
 
-        $attributes = $_options;
+        $value = get_post_meta( $this->post_id, $name, true );
 
-        return self::text( $name, $attributes );
+        if( empty($value) )
+            $value = array_key_exists( 'value', $_options ) ? $_options['value'] : '';
+
+        if( ! empty($value) )
+            $_options['value'] = date('F j, Y', strtotime($value));
+
+        $name = $this->post_id . "[{$name}]";
+
+        return HTML::text( $name, $_options );
     }
 
     public function timepicker( $name, $_options = array() )
