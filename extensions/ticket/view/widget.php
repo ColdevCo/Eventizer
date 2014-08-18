@@ -82,6 +82,8 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
 
         </div>
 
+        <?php if ( $tickets ) : ?>
+
         <hr />
 
         <div class="input-group">
@@ -97,6 +99,8 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
             <?= HTML::text( 'cem_widget_ticket-quantity', array( 'id' => 'cem_widget_ticket-quantity' ) ); ?>
 
         </div>
+
+        <?php endif; ?>
 
         <div class="input-group">
 

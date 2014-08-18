@@ -248,7 +248,7 @@ $post_id = $post->ID;
                 <td><?= 'From: ' . $ticket->start_sell_date . '<br />To: ' . $ticket->stop_sell_date; ?></td>
                 <td><?= 'Min: ' . $ticket->min_buy . '<br />Max: ' . $ticket->max_buy; ?></td>
                 <td><?= $ticket->quota; ?></td>
-                <td><?= $ticket->price; ?></td>
+                <td><?= get_event_options( 'default_currency' ) . ' ' . number_format($ticket->price); ?></td>
                 <td><button class="delete">Delete</button></td>
             </tr>
         <?php $count++; endforeach; ?>
@@ -317,7 +317,9 @@ $post_id = $post->ID;
             ticket += "<td>From:&nbsp; " + ticket_start_sell + "<br />To:&nbsp; " + ticket_stop_sell + "</td>";
             ticket += "<td>Min:&nbsp; " + ticket_min_buy + "<br />Max:&nbsp; " + ticket_max_buy + "</td>";
             ticket += "<td>" + ticket_quantity + "</td>";
-            ticket += "<td>" + ticket_price + "</td>";
+            ticket += "<td><?= get_event_options( 'default_currency' ) ?> " + ticket_price.replace(/./g, function(c, i, a) {
+                return i && c !== "." && !((a.length - i) % 3) ? ',' + c : c;
+            }); + "</td>";
             ticket += "<td><button class='delete'>Delete</button></td>";
             ticket += "</tr>";
 
