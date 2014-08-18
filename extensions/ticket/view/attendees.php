@@ -10,9 +10,9 @@ $filter = array(
     'phone' => $_GET['ev_attendee_phone']
 );
 
-$page = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+$paged = isset($_GET['paged']) ? (int) $_GET['paged'] : 1;
 
-$attendees = EventTicket::get_attendees( $filter, $page );
+$attendees = EventTicket::get_attendees( $filter, $paged );
 
 ?>
 <style type="text/css">
@@ -181,7 +181,6 @@ $attendees = EventTicket::get_attendees( $filter, $page );
     <table class="attendees">
         <thead>
         <tr>
-            <th>No.</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -190,9 +189,8 @@ $attendees = EventTicket::get_attendees( $filter, $page );
         </tr>
         </thead>
         <tbody>
-        <?php $count = 0; foreach ( $attendees as $attendee ) : ?>
+        <?php foreach ( $attendees->data as $attendee ) : ?>
         <tr>
-            <td><?= ++$count ?></td>
             <td><?= $attendee->name ?></td>
             <td><?= $attendee->email !== '' ? $attendee->email : '-' ?></td>
             <td><?= $attendee->phone !== '' ? $attendee->phone : '-' ?></td>
@@ -202,6 +200,9 @@ $attendees = EventTicket::get_attendees( $filter, $page );
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?= $attendees->paginate; ?>
+
 </div>
 
 <script type="text/javascript">

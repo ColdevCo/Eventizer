@@ -73,6 +73,10 @@ class TicketWidget extends WP_Widget {
 	{
         $instance[ 'widget_ticket_featured_event' ] = $new_instance[ 'widget_ticket_featured_event' ];
 
+        if ( $instance[ 'widget_ticket_featured_event' ] == "select-event" ) {
+            $instance[ 'widget_ticket_featured_event' ] = $new_instance[ 'widget_ticket_featured_event-event_id' ];
+        }
+
         update_event_options( 'widget_ticket_featured_event', $instance[ 'widget_ticket_featured_event' ] );
 
         return $instance;

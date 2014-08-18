@@ -42,7 +42,17 @@ class EventTicket {
         }
 	}
 
-    public static function get_attendees( $filter = array(), $page = 1 ) {
+    public static function get_event_tickets( $event_id ) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . "event_tickets";
+
+        $tickets = $wpdb->get_results( "SELECT * FROM {$table_name} WHERE `event_id` = {$event_id}" );
+
+        return $tickets;
+    }
+
+    public static function get_attendees( $filter = array(), &$page = 1 ) {
         global $wpdb;
 
         $table_name = $wpdb->prefix . "event_attendees";
@@ -63,39 +73,29 @@ class EventTicket {
 
         $sql = "SELECT * FROM {$table_name}";
         $sql .= empty($filters) ? '' : " WHERE " . implode(' AND ', $filters);
-        $sql .= " LIMIT " . (($page - 1) * 20) . ",20";
 
-        $attendees = $wpdb->get_results( $sql );
+        $total = $wpdb->get_var( "SELECT COUNT(1) FROM (${sql}) AS `total`" );
+        $items_per_page = 10;
 
-        return $attendees;
+        $attendees = $wpdb->get_results( $sql . " LIMIT " . (($page - 1) * $items_per_page) . ",{$items_per_page}" );
+        $paginate = paginate_links( array(
+            'base' => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+            'format' => '?paged=%#%',
+            'current' => $page,
+            'total' => ceil($total / $items_per_page)
+        ) );
+
+        return (object) array('data' => $attendees, 'paginate' => $paginate);
     }
 
-	public static function get_ticket_name( $ticket_id ) {
-		global $wpdb;
+    public static function get_ticket_name( $ticket_id ) {
+        global $wpdb;
 
-		$table_name = $wpdb->prefix . "event_tickets";
-		$ticket     = $wpdb->get_row( "SELECT * FROM {$table_name} WHERE `id` = {$ticket_id}" );
+        $table_name = $wpdb->prefix . "event_tickets";
+        $ticket     = $wpdb->get_row( "SELECT * FROM {$table_name} WHERE `id` = {$ticket_id}" );
 
-		return $ticket->name;
-	}
-
-	public function get_ticket_quota() {
-		global $wpdb, $post;
-
-		$table_name = $wpdb->prefix . "event_tickets";
-		$ticket     = $wpdb->get_row( "SELECT * FROM $table_name WHERE event_id = $post->ID" );
-
-		return $ticket->quota;
-	}
-
-	public function get_ticket_max_tickets_per_person() {
-		global $wpdb, $post;
-
-		$table_name = $wpdb->prefix . "event_tickets";
-		$ticket     = $wpdb->get_row( "SELECT * FROM $table_name WHERE event_id = $post->ID" );
-
-		return $ticket->max_tickets_per_person;
-	}
+        return $ticket->name;
+    }
 
 	public function init() {
 		$this->register_ticket_page();

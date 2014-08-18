@@ -10,6 +10,9 @@ $featured_option = get_event_options( 'widget_ticket_featured_event' );
 switch ( $featured_option ) {
     case 'random':
         $args['orderby'] = 'rand';
+
+        $events = get_posts( $args );
+        $event = isset( $events ) ? $events[0] : null;
         break;
     case 'upcoming':
         $args['orderby'] = 'meta_value';
@@ -18,18 +21,23 @@ switch ( $featured_option ) {
         $args['meta_query'] = array(
             array(
                 'key' => 'ev_start_date',
-                'value' => date('F j, Y'),
+                'value' => date('Y-m-d'),
                 'compare' => '>=',
                 'type' => 'DATE'
             )
         );
-        break;
 
+        $events = get_posts( $args );
+        $event = isset( $events ) ? $events[0] : null;
+        break;
+    default:
+        $event = get_post( $featured_option );
 }
 
-$events = get_posts( $args );
-
-$event = get_post( 69 );
+if( $event ) {
+    $tickets = EventTicket::get_event_tickets( $event->ID );
+    $tickets = array_reduce($tickets, function($result, $data){ $result["{$data->id} "] = $data->name; return $result; }, array());
+}
 
 wp_enqueue_script( 'ev-ticket', plugins_url( '', dirname( __FILE__ ) ) . '/js/ev-ticket.js', array( 'jquery' ) );
 wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/css/ev-ticket.css' );
@@ -79,7 +87,7 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
         <div class="input-group">
 
             <?= HTML::label( 'Type', 'cem_widget_ticket-ticket_id' ); ?>
-            <?= HTML::text( 'cem_widget_ticket-ticket_id', array( 'id' => 'cem_widget_ticket-ticket_id' ) ); ?>
+            <?= HTML::dropdown( 'cem_widget_ticket-ticket_id', $tickets, array( 'id' => 'cem_widget_ticket-ticket_id' ) ); ?>
 
         </div>
 
