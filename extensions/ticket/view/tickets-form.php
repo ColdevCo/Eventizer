@@ -236,6 +236,8 @@ $post_id = $post->ID;
         $count = 0;
         foreach ( $tickets as $ticket ) :
         ?>
+            <input type='hidden' name='ticket[<?= $count; ?>][id]' value='<?= $ticket->id; ?>' />
+            <input type='hidden' name='ticket[<?= $count; ?>][delete]' value='false' />
             <tr>
                 <input type='hidden' name='ticket[<?= $count; ?>][name]' value='<?= $ticket->name; ?>' />
                 <input type='hidden' name='ticket[<?= $count; ?>][start_sell_date]' value='<?= $ticket->start_sell_date; ?>' />
@@ -327,10 +329,13 @@ $post_id = $post->ID;
 
             ticket_count++;
 
+            jQuery('.ticket-list button.delete').unbind('click');
+
             jQuery('.ticket-list button.delete').bind('click', function(e) {
 
                 e.preventDefault();
 
+                jQuery(this).parents('tr').prev().val('true');
                 jQuery(this).parents('tr').remove();
             });
 
@@ -340,6 +345,7 @@ $post_id = $post->ID;
 
             e.preventDefault();
 
+            jQuery(this).parents('tr').prev().val('true');
             jQuery(this).parents('tr').remove();
         });
     });

@@ -22,23 +22,44 @@ class EventTicket {
 
         update_post_meta( $post_id, 'ev_using_tickets', $_POST[$post_id]['ev_using_tickets'] );
 
-        $wpdb->delete( $table_name, array( 'event_id' => $post_id ), array( '%d' ) );
-
         $tickets = $_POST['ticket'];
         foreach( $tickets as $ticket ) {
 
-            $wpdb->insert( $table_name,
-                array(
-                    'event_id' => $post_id,
-                    'name'     => $ticket['name'],
-                    'start_sell_date' => $ticket['start_sell_date'],
-                    'stop_sell_date'  => $ticket['stop_sell_date'],
-                    'min_buy' => $ticket['min_buy'],
-                    'max_buy' => $ticket['max_buy'],
-                    'quota'   => $ticket['quantity'],
-                    'price'   => $ticket['price']
-                )
-            );
+            if ( isset($ticket['id']) ) {
+                if ( $ticket['delete'] === 'true' ) {
+                    $wpdb->delete( $table_name, array( 'id' => $ticket['id'] ), array( '%d' ) );
+                } else {
+                    $wpdb->update(
+                        $table_name,
+                        array(
+                            'event_id' => $post_id,
+                            'name'     => $ticket['name'],
+                            'start_sell_date' => $ticket['start_sell_date'],
+                            'stop_sell_date'  => $ticket['stop_sell_date'],
+                            'min_buy' => $ticket['min_buy'],
+                            'max_buy' => $ticket['max_buy'],
+                            'quota'   => $ticket['quantity'],
+                            'price'   => $ticket['price']
+                        ),
+                        array( 'id' => $ticket['id'] ),
+                        array( '%d', '%s', '%s', '%s', '%d', '%d', '%d', '%d' ),
+                        array( '%d' )
+                    );
+                }
+            } else {
+                $wpdb->insert( $table_name,
+                    array(
+                        'event_id' => $post_id,
+                        'name'     => $ticket['name'],
+                        'start_sell_date' => $ticket['start_sell_date'],
+                        'stop_sell_date'  => $ticket['stop_sell_date'],
+                        'min_buy' => $ticket['min_buy'],
+                        'max_buy' => $ticket['max_buy'],
+                        'quota'   => $ticket['quantity'],
+                        'price'   => $ticket['price']
+                    )
+                );
+            }
         }
 	}
 
