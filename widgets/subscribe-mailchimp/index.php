@@ -63,6 +63,17 @@ class SubscribeMailChimp extends WP_Widget {
 	{
 		$instance[ 'mailchimp-apikey' ]  = $new_instance[ 'mailchimp-apikey' ];
 		$instance[ 'mailchimp-list-id' ] = $new_instance[ 'mailchimp-list-id' ];
+
+        if ( ! is_null( get_event_options( 'mailchimp-apikey' ) ) )
+            update_event_options( 'mailchimp-apikey', $instance[ 'mailchimp-apikey' ] );
+        else
+            add_event_options( 'mailchimp-apikey', $instance[ 'mailchimp-apikey' ] );
+
+        if ( ! is_null( get_event_options( 'mailchimp-list-id' ) ) )
+            update_event_options( 'mailchimp-list-id', $instance[ 'mailchimp-list-id' ] );
+        else
+            add_event_options( 'mailchimp-list-id', $instance[ 'mailchimp-list-id' ] );
+
 		return $instance;
 	}
 }
