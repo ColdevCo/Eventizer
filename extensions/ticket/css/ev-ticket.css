@@ -1,49 +1,62 @@
 /* ######################### Widget Ticket ######################## */
 
-#cem-ticket-widget {
-    background-color: #f3f3f7;
-    padding: 10px;
+.widget_cem_ticket {
+    /* background-color: #f3f3f7; */
+    /* padding: 10px; */
     border: 1px solid #ddd;
+    background-color: #E8E8E8;
+    /*
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+    */
 }
 
-#cem-ticket-widget .cem-event-thumbnail {
+.widget_cem_ticket .cem-event-thumbnail {
     display: block;
+    background-color: #FFFFFF;
     margin-bottom: 5px;
     text-align: center;
+    padding: 4px;
 }
 
-#cem-ticket-widget .cem-event-thumbnail > img {
+.widget_cem_ticket .cem-event-thumbnail > img {
     max-width: 100%;
     height: auto;
 }
 
-#cem-ticket-widget .input-group:not(:first-child) {
-    margin-top: 7px;
+.widget_cem_ticket h3,
+.widget_cem_ticket p {
+    width: auto;
+    margin: 20px 20px 5px;
 }
 
-#cem-ticket-widget .input-group:last-child {
-    margin-top: 20px;
+.widget_cem_ticket .input-group {
+    width: auto;
+    padding: 20px 20px 5px;
 }
 
-#cem-ticket-widget .input-group > * {
+.widget_cem_ticket .input-group:last-child {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.widget_cem_ticket .input-group > * {
     display: block;
     width: 100%;
 }
 
-#cem-ticket-widget .input-group > label {
+.widget_cem_ticket .input-group > label {
     cursor: pointer;
 }
 
-#cem-ticket-widget .input-group > button {
+.widget_cem_ticket .input-group > button {
     width: auto;
     display: inline-block;
     padding: 10px 45px;
 }
 
-#cem-ticket-widget hr {
+.widget_cem_ticket hr {
     margin: 30px 2px 20px;
 }
 

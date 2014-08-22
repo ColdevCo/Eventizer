@@ -44,7 +44,7 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
 
 ?>
 
-<div id="cem-ticket-widget">
+<aside id="cem-ticket-<?= $this->number; ?>" class="widget widget_cem_ticket">
 
     <?php if ( isset( $event ) ) : ?>
 
@@ -59,7 +59,9 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
         </div>
 
         <h3><a href="<?= get_permalink( $event->ID ); ?>"><?= $event->post_title; ?></a></h3>
-        <p><?= $event->post_excerpt; ?></p>
+        <?php if ( $event->post_excerpt !== '' ) : ?>
+            <p><?= $event->post_excerpt; ?></p>
+        <?php endif; ?>
 
         <div class="input-group">
 
@@ -83,8 +85,6 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
         </div>
 
         <?php if ( $tickets ) : ?>
-
-        <hr />
 
         <div class="input-group">
 
@@ -112,4 +112,4 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
 
     <?php endif; ?>
 
-</div>
+</aside>
