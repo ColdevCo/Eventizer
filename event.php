@@ -177,7 +177,15 @@ class Event {
 		}
 
 		add_action( 'admin_menu' , function() {
-			add_submenu_page( 'edit.php?post_type=event' , 'setting' , 'Setting' , 'manage_options' , 'event-setting' , function() { include 'templates/setting.php'; } );		
+			add_submenu_page( 'edit.php?post_type=event' , 'setting' , 'Setting' , 'manage_options' , 'event-setting' , function() {
+
+                $setting_tabs = array();
+                $setting_tabs['general'] = __EVENT_TEMPLATE_PATH__ . 'setting-general.php';
+
+                $setting_tabs = apply_filters( 'ev_setting_tabs', $setting_tabs );
+
+                include 'templates/setting.php';
+            } );
 		} );
 	}
 
