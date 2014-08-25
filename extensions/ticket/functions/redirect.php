@@ -30,6 +30,11 @@ add_action( 'template_redirect', function(){
 			'quantity' 	=> $quantity
 		)
 	);
+
+    $mail = EventMail::get_mail_by_context( 'Order' );
+
+    wp_mail( $email, $mail->subject, $mail->content );
+
 	wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
 	exit;
 });
