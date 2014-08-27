@@ -1,7 +1,7 @@
 <?php
 
 if ( $_POST ) {
-    EventMail::update( $_GET['mail_id'], $_POST );
+    update_mail( $_GET['mail_id'], $_POST );
 }
 ?>
 <style type="text/css">
@@ -42,14 +42,14 @@ if ( $_POST ) {
     <?php $form = new Form(); echo $form->open( '', array( 'method' => 'post' ) ); ?>
 
     <?php
-    $mail = EventMail::get_mail( isset($_GET['mail_id']) ? $_GET['mail_id'] : 0 );
+    $mail = get_mail( isset($_GET['mail_id']) ? $_GET['mail_id'] : 0 );
     if ( $mail ) :
     ?>
 
     <div class="input-group">
 
         <?php
-        $mails = EventMail::get_mails();
+        $mails = get_all_mails();
         $mails = array_reduce($mails, function($result, $data){ $result["{$data->id} "] = $data->context; return $result; }, array());
 
         echo HTML::label( 'Context', 'cem_mail_editor_context' );

@@ -23,7 +23,7 @@ define( '__EVENT_EXTENSION_URL__' , plugins_url() . '/extensions/' );
 define( '__EVENT_WIDGET_URL__' , plugins_url() . '/widgets/' );
 
 include_once( 'lib/event_options.php' );
-include_once( 'lib/field-type.php' );
+include_once( 'lib/mail_editor.php' );
 include_once( 'lib/template_helpers.php' );
 include_once( 'lib/extension.php' );
 include_once( 'lib/widget.php' );
@@ -165,6 +165,22 @@ class Event {
 		$wpdb->insert( $table_name , array( 'name' => 'enabled_extensions' , 	'value' => '' ) );
 	}
 
+    public function create_event_mails_table() {
+        global $wpdb;
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+        $sql = "
+		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_mails (
+		                id int(11) NOT NULL AUTO_INCREMENT,
+						subject tinytext DEFAULT '',
+						content text DEFAULT '',
+						context tinytext DEFAULT '',
+						UNIQUE KEY id (id)
+						)";
+        dbDelta( $sql );
+    }
+
 	public function init()
 	{
 		$this->register_event_post_type();
@@ -173,6 +189,7 @@ class Event {
 
 		if( is_admin() && get_option( 'Install_Event_Setting' ) == 'true' ) {
 			$this->create_event_setting_table();
+            $this->create_event_mails_table();
 			delete_option( 'Install_Event_Setting' );
 		}
 
@@ -181,6 +198,7 @@ class Event {
 
                 $setting_tabs = array();
                 $setting_tabs['general'] = __EVENT_TEMPLATE_PATH__ . 'setting-general.php';
+                $setting_tabs['mail']    = __EVENT_TEMPLATE_PATH__ . 'setting-mail.php';
 
                 $setting_tabs = apply_filters( 'ev_setting_tabs', $setting_tabs );
 
