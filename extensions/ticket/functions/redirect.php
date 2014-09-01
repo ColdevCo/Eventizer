@@ -31,7 +31,7 @@ add_action( 'template_redirect', function(){
 		)
 	);
 
-    $mail = EventMail::get_mail_by_context( 'Order' );
+    $mail = get_mail_by_context( 'Order' );
 
     wp_mail( $email, $mail->subject, $mail->content );
 

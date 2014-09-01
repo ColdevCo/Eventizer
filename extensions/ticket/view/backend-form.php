@@ -10,6 +10,7 @@
 
     #widget_ticket_featured_event-event_id {
         margin-left: 20px;
+        max-width: 80%;
     }
 </style>
 

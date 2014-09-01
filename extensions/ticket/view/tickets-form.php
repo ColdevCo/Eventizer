@@ -247,7 +247,7 @@ $post_id = $post->ID;
                 <input type='hidden' name='ticket[<?= $count; ?>][quantity]' value='<?= $ticket->quota; ?>' />
                 <input type='hidden' name='ticket[<?= $count; ?>][price]' value='<?= $ticket->price; ?>' />
                 <td><?= $ticket->name; ?></td>
-                <td><?= 'From: ' . $ticket->start_sell_date . '<br />To: ' . $ticket->stop_sell_date; ?></td>
+                <td><?= 'From: ' . date( 'F j, Y H:i a', strtotime($ticket->start_sell_date) ) . '<br />To: ' . date( 'F j, Y h:i a', strtotime($ticket->stop_sell_date) ); ?></td>
                 <td><?= 'Min: ' . $ticket->min_buy . '<br />Max: ' . $ticket->max_buy; ?></td>
                 <td><?= $ticket->quota; ?></td>
                 <td><?= get_event_options( 'default_currency' ) . ' ' . number_format($ticket->price); ?></td>
@@ -286,17 +286,41 @@ $post_id = $post->ID;
 
             e.preventDefault();
 
-            var ticket_name = jQuery('#ev_ticket_name').val();
-            var ticket_price = jQuery('#ev_ticket_price').val();
+            var ticket_name     = jQuery('#ev_ticket_name').val();
+            var ticket_price    = jQuery('#ev_ticket_price').val();
             var ticket_quantity = jQuery('#ev_ticket_qty').val();
 
             var ticket_start_sell_date = jQuery('#ev_ticket_start_sell').val();
-            var ticket_start_sell_time = jQuery('select[name=ev_ticket_start_sell-time-hour]').val() + " : " + jQuery('select[name=ev_ticket_start_sell-time-minute]').val() + "&nbsp; " + jQuery('select[name=ev_ticket_start_sell-time-meridiem]').val();
-            var ticket_stop_sell_date = jQuery('#ev_ticket_stop_sell').val();
-            var ticket_stop_sell_time = jQuery('select[name=ev_ticket_stop_sell-time-hour]').val() + " : " + jQuery('select[name=ev_ticket_stop_sell-time-minute]').val() + "&nbsp; " + jQuery('select[name=ev_ticket_stop_sell-time-meridiem]').val();
+            var ticket_stop_sell_date  = jQuery('#ev_ticket_stop_sell').val();
+
+            var ticket_start_sell_hour = jQuery('select[name=ev_ticket_start_sell-time-hour]').val();
+            var ticket_start_sell_min  = jQuery('select[name=ev_ticket_start_sell-time-minute]').val();
+            var ticket_start_sell_md   = jQuery('select[name=ev_ticket_start_sell-time-meridiem]').val();
+            var ticket_start_sell_time = ticket_start_sell_hour + ":" + ticket_start_sell_min + " " + ticket_start_sell_md;
+
+            var ticket_stop_sell_hour  = jQuery('select[name=ev_ticket_stop_sell-time-hour]').val();
+            var ticket_stop_sell_min   = jQuery('select[name=ev_ticket_stop_sell-time-minute]').val();
+            var ticket_stop_sell_md    = jQuery('select[name=ev_ticket_stop_sell-time-meridiem]').val();
+            var ticket_stop_sell_time  = ticket_stop_sell_hour + ":" + ticket_stop_sell_min + " " + ticket_stop_sell_md;
 
             var ticket_start_sell = ticket_start_sell_date + " " + ticket_start_sell_time;
-            var ticket_stop_sell = ticket_stop_sell_date + " " + ticket_stop_sell_time;
+            var ticket_stop_sell  = ticket_stop_sell_date + " " + ticket_stop_sell_time;
+
+            var temp        = new Date( ticket_start_sell_date );
+            var temp_date   = temp.getDate();
+            var temp_month  = '0' + (parseInt(temp.getMonth()) + 1);
+            var temp_year   = temp.getFullYear();
+            var temp_hour   = ticket_start_sell_md == 'pm' ? (parseInt(ticket_start_sell_hour) + 12) : parseInt(ticket_start_sell_hour);
+            var temp_minute = ticket_start_sell_min;
+            var ticket_start_sell_mysql_format = temp_year + '-' + temp_month + '-' + temp_date + ' ' + temp_hour + ':' + temp_minute + ':00';
+
+            temp        = new Date( ticket_stop_sell_date );
+            temp_date   = temp.getDate();
+            temp_month  = '0' + (parseInt(temp.getMonth()) + 1);
+            temp_year   = temp.getFullYear();
+            temp_hour   = ticket_stop_sell_md == 'pm' ? (parseInt(ticket_stop_sell_hour) + 12) : parseInt(ticket_stop_sell_hour);
+            temp_minute = ticket_stop_sell_min;
+            var ticket_stop_sell_mysql_format = temp_year + '-' + temp_month + '-' + temp_date + ' ' + temp_hour + ':' + temp_minute + ':00';
 
             var ticket_min_buy = jQuery('#ev_ticket_min').val();
             var ticket_max_buy = jQuery('#ev_ticket_max').val();
@@ -309,8 +333,8 @@ $post_id = $post->ID;
             var ticket = "";
             ticket += "<tr>";
             ticket += "<input type='hidden' name='ticket[" + ticket_count + "][name]' value='" + ticket_name + "' />";
-            ticket += "<input type='hidden' name='ticket[" + ticket_count + "][start_sell_date]' value='" + ticket_start_sell + "' />";
-            ticket += "<input type='hidden' name='ticket[" + ticket_count + "][stop_sell_date]' value='" + ticket_stop_sell + "' />";
+            ticket += "<input type='hidden' name='ticket[" + ticket_count + "][start_sell_date]' value='" + ticket_start_sell_mysql_format + "' />";
+            ticket += "<input type='hidden' name='ticket[" + ticket_count + "][stop_sell_date]' value='" + ticket_stop_sell_mysql_format + "' />";
             ticket += "<input type='hidden' name='ticket[" + ticket_count + "][min_buy]' value='" + ticket_min_buy + "' />";
             ticket += "<input type='hidden' name='ticket[" + ticket_count + "][max_buy]' value='" + ticket_max_buy + "' />";
             ticket += "<input type='hidden' name='ticket[" + ticket_count + "][quantity]' value='" + ticket_quantity + "' />";

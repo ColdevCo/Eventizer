@@ -35,7 +35,7 @@ switch ( $featured_option ) {
 }
 
 if( $event ) {
-    $tickets = EventTicket::get_event_tickets( $event->ID );
+    $tickets = EventTicket::get_event_tickets( $event->ID, true );
     $tickets = array_reduce($tickets, function($result, $data){ $result["{$data->id} "] = $data->name; return $result; }, array());
 }
 
@@ -63,6 +63,8 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
             <p><?= $event->post_excerpt; ?></p>
         <?php endif; ?>
 
+        <?php if ( $tickets ) : ?>
+
         <div class="input-group">
 
             <?= HTML::label( 'Name', 'cem_widget_ticket-name' ); ?>
@@ -84,8 +86,6 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
 
         </div>
 
-        <?php if ( $tickets ) : ?>
-
         <div class="input-group">
 
             <?= HTML::label( 'Type', 'cem_widget_ticket-ticket_id' ); ?>
@@ -100,13 +100,13 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
 
         </div>
 
-        <?php endif; ?>
-
         <div class="input-group">
 
             <?= HTML::button( 'Buy' ); ?>
 
         </div>
+
+        <?php endif; ?>
 
     </form>
 

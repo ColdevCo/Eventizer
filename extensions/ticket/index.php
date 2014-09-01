@@ -63,12 +63,18 @@ class EventTicket {
         }
 	}
 
-    public static function get_event_tickets( $event_id ) {
+    public static function get_event_tickets( $event_id, $in_date_range = false ) {
         global $wpdb;
 
         $table_name = $wpdb->prefix . "event_tickets";
 
-        $tickets = $wpdb->get_results( "SELECT * FROM {$table_name} WHERE `event_id` = {$event_id}" );
+        $conditions = "";
+        if ( $in_date_range ) {
+            $current_datetime = date("Y-m-d H:i:s");
+            $conditions = " AND `start_sell_date` <= '{$current_datetime}' AND `stop_sell_date` >= '{$current_datetime}'";
+        }
+
+        $tickets = $wpdb->get_results( "SELECT * FROM {$table_name} WHERE `event_id` = {$event_id}" . $conditions );
 
         return $tickets;
     }
@@ -134,8 +140,8 @@ class EventTicket {
 		                id int(11) NOT NULL AUTO_INCREMENT,
 						event_id int(11) NOT NULL,
 						name tinytext DEFAULT '' NOT NULL,
-						start_sell_date char(100),
-						stop_sell_date char(100),
+						start_sell_date datetime,
+						stop_sell_date datetime,
 						min_buy int(11) DEFAULT 1 NOT NULL,
 						max_buy int(11)DEFAULT 1 NOT NULL,
 						quota int(11) DEFAULT -1 NOT NULL,
