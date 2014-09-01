@@ -181,10 +181,23 @@ class Event {
         dbDelta( $sql );
     }
 
+    public function register_default_single_event_template() {
+        add_filter('single_template', function( $single ){
+            global $wp_query, $post;
+
+            if ( $post->post_type == "event" ){
+                if( file_exists( __EVENT_TEMPLATE_PATH__. 'single_event_default.php' ) )
+                    return __EVENT_TEMPLATE_PATH__ . 'single_event_default.php';
+            }
+            return $single;
+        });
+    }
+
 	public function init()
 	{
 		$this->register_event_post_type();
         $this->register_event_taxonomies();
+        $this->register_default_single_event_template();
 		$this->render();
 
 		if( is_admin() && get_option( 'Install_Event_Setting' ) == 'true' ) {
