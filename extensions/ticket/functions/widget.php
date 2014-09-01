@@ -24,7 +24,7 @@ class TicketWidget extends WP_Widget {
 	 */
 	public function widget( $args , $instance )
 	{
-		include( __EVENT_EXTENSION_PATH__ . '/ticket/view/widget.php' );
+		include( __EVENTIZER_EXTENSIONS_PATH__ . '/ticket/view/widget.php' );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class TicketWidget extends WP_Widget {
                 $select_options['checked'] = true;
         }
 
-		include( __EVENT_EXTENSION_PATH__ . '/ticket/view/backend-form.php' );
+		include( __EVENTIZER_EXTENSIONS_PATH__ . '/ticket/view/backend-form.php' );
 	}
 
 	/**

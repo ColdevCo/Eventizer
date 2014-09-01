@@ -230,7 +230,7 @@ $post_id = $post->ID;
         <?php
         global $wpdb, $post;
 
-        $table_name = $wpdb->prefix . "event_tickets";
+        $table_name = $wpdb->prefix . "eventizer_tickets";
         $tickets    = $wpdb->get_results( "SELECT * FROM `{$table_name}` WHERE `event_id` = {$post->ID}" );
 
         $count = 0;

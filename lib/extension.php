@@ -13,10 +13,10 @@ function load_extensions() {
 }
 
 function scan_extensions() {
-	$exts_path = opendir( __EVENT_EXTENSION_PATH__ );
+	$exts_path = opendir( __EVENTIZER_EXTENSIONS_PATH__ );
 	$exts = array();
 	while ( false !== ( $ext = readdir( $exts_path ) ) ) {
-		$ext_path = __EVENT_EXTENSION_PATH__ . $ext;
+		$ext_path = __EVENTIZER_EXTENSIONS_PATH__ . $ext;
 		if( is_dir( $ext_path ) && $ext != '.' && $ext != '..' ) {
 			array_push( $exts , read_info( $ext ) );
 		}
@@ -26,7 +26,7 @@ function scan_extensions() {
 }
 
 function read_info( $extension ) {
-	$path 	= __EVENT_EXTENSION_PATH__ . $extension . '/index.php';
+	$path 	= __EVENTIZER_EXTENSIONS_PATH__ . $extension . '/index.php';
 	$tokens = token_get_all( file_get_contents( $path ) );
 
 	$comments = array();

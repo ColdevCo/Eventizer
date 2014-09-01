@@ -11,14 +11,14 @@ include_once( 'functions/widget.php' );
 class EventTicket {
 
 	public function __construct() {
-		add_action( 'event_init', array( $this, 'init' ) );
-		add_action( 'event_save', array( $this, 'save' ) );
+		add_action( 'eventizer_init', array( $this, 'init' ) );
+		add_action( 'eventizer_save', array( $this, 'save' ) );
 	}
 
 	public function save( $post_id ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . "event_tickets";
+		$table_name = $wpdb->prefix . "eventizer_tickets";
 
         update_post_meta( $post_id, 'ev_using_tickets', $_POST[$post_id]['ev_using_tickets'] );
 
@@ -66,7 +66,7 @@ class EventTicket {
     public static function get_event_tickets( $event_id, $in_date_range = false ) {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . "event_tickets";
+        $table_name = $wpdb->prefix . "eventizer_tickets";
 
         $conditions = "";
         if ( $in_date_range ) {
@@ -82,7 +82,7 @@ class EventTicket {
     public static function get_attendees( $filter = array(), &$page = 1 ) {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . "event_attendees";
+        $table_name = $wpdb->prefix . "eventizer_attendees";
 
         $filters = array();
         if ( is_array($filter) and ! empty($filter) ) {
@@ -118,7 +118,7 @@ class EventTicket {
     public static function get_ticket_name( $ticket_id ) {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . "event_tickets";
+        $table_name = $wpdb->prefix . "eventizer_tickets";
         $ticket     = $wpdb->get_row( "SELECT * FROM {$table_name} WHERE `id` = {$ticket_id}" );
 
         return $ticket->name;
@@ -136,7 +136,7 @@ class EventTicket {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "
-		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_tickets (
+		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}eventizer_tickets (
 		                id int(11) NOT NULL AUTO_INCREMENT,
 						event_id int(11) NOT NULL,
 						name tinytext DEFAULT '' NOT NULL,
@@ -151,7 +151,7 @@ class EventTicket {
         dbDelta( $sql );
 
         $sql = "
-		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}event_attendees (
+		CREATE TABLE IF NOT EXISTS {$wpdb->prefix}eventizer_attendees (
 						id int(11) AUTO_INCREMENT,
 						email tinytext DEFAULT '' NOT NULL,
 						name tinytext DEFAULT '' NOT NULL,
@@ -173,7 +173,7 @@ class EventTicket {
 	}
 
 	public function render() {
-		add_action( 'event_render', function() {
+		add_action( 'eventizer_render', function() {
 			add_action( 'add_meta_boxes', function() {
 				add_meta_box( 'event-tickets-box', 'Event Tickets', array( $this , 'details_form' ) , 'event', 'normal', 'low' );
 			} );

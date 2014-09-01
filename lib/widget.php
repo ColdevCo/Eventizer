@@ -8,10 +8,10 @@ function load_widgets() {
 }
 
 function scan_widgets() {
-	$widgets_path = opendir( __EVENT_WIDGET_PATH__ );
+	$widgets_path = opendir( __EVENTIZER_WIDGETS_PATH__ );
 	$widgets = array();
 	while ( false !== ( $widget = readdir( $widgets_path ) ) ) {
-		$widget_path = __EVENT_WIDGET_PATH__ . $widget;
+		$widget_path = __EVENTIZER_WIDGETS_PATH__ . $widget;
 		if( is_dir( $widget_path ) && $widget != '.' && $widget != '..' ) {
 			array_push( $widgets , $widget_path . '/index.php' );
 		}

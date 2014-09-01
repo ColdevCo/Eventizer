@@ -20,7 +20,7 @@ add_action( 'template_redirect', function(){
     $ticket_id  = $_POST[ 'cem_widget_ticket-ticket_id' ];
     $quantity   = $_POST[ 'cem_widget_ticket-quantity' ];
 
-	$wpdb->insert(  $wpdb->prefix . 'event_attendees' ,
+	$wpdb->insert(  $wpdb->prefix . 'eventizer_attendees' ,
 		array(
             'name'      => $name,
 			'email' 	=> $email,
