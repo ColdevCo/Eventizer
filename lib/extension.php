@@ -56,4 +56,9 @@ function parse_info( $comment ) {
 	return $info;
 }
 
+function is_enabled( $extension ) {
+    $enabled_extensions = unserialize( get_event_options( 'enabled_extensions' ) );
+    return ( is_array( $enabled_extensions ) and in_array( " {$extension}" , $enabled_extensions ) );
+}
+
 return load_extensions();
