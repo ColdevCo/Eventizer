@@ -131,6 +131,30 @@ class Eventizer {
         $wpdb->insert( $table_name , array( 'subject' => 'Thanks' , 'content' => 'Test', 'context' => 'Order' ) );
     }
 
+    public function add_events_page()
+    {
+        $my_post = array(
+            'post_type'     => 'page',
+            'post_title'    => 'Events',
+            'post_name'     => 'event_list',
+            'post_status'   => 'publish',
+        );
+        wp_insert_post( $my_post );
+    }
+
+    public function register_default_event_list_template()
+    {
+        add_filter( 'page_template', function( $page_template ){
+
+            if ( is_page( 'event_list' ) ) {
+                if( file_exists( __EVENTIZER_TEMPLATES_PATH__. 'event_list_template.php' ) )
+                    $page_template = __EVENTIZER_TEMPLATES_PATH__. 'event_list_template.php';
+            }
+
+            return $page_template;
+        });
+    }
+
     public function register_default_single_event_template()
     {
         add_filter('single_template', function( $single ){
@@ -138,7 +162,7 @@ class Eventizer {
 
             if ( $post->post_type == "event" ){
                 if( file_exists( __EVENTIZER_TEMPLATES_PATH__. 'single_event_default.php' ) )
-                    return __EVENTIZER_TEMPLATES_PATH__ . 'single_event_default.php';
+                    $single = __EVENTIZER_TEMPLATES_PATH__ . 'single_event_default.php';
             }
             return $single;
         });
@@ -149,11 +173,13 @@ class Eventizer {
 		$this->register_event_post_type();
         $this->register_event_taxonomies();
         $this->register_default_single_event_template();
+        $this->register_default_event_list_template();
 		$this->render();
 
 		if( is_admin() && get_option( 'Install_Eventizer_Setting' ) == 'true' ) {
 			$this->create_event_setting_table();
             $this->create_event_mails_table();
+            $this->add_events_page();
 			delete_option( 'Install_Eventizer_Setting' );
         }
 
