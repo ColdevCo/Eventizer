@@ -103,6 +103,8 @@ class Eventizer {
 						value text DEFAULT '' NOT NULL,
 						UNIQUE KEY id (id)
 						);";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
 		$wpdb->insert( $table_name , array( 'name' => 'default_currency' , 	'value' => 'IDR' ) );
@@ -115,13 +117,15 @@ class Eventizer {
 
         $table_name = $wpdb->prefix . "eventizer_mails";
         $sql = "
-		CREATE TABLE IF NOT EXISTS {$$table_name} (
+		CREATE TABLE IF NOT EXISTS {$table_name} (
 		                id int(11) NOT NULL AUTO_INCREMENT,
 						subject tinytext DEFAULT '',
 						content text DEFAULT '',
 						context tinytext DEFAULT '',
 						UNIQUE KEY id (id)
 						)";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
 
         $wpdb->insert( $table_name , array( 'subject' => 'Thanks' , 'content' => 'Test', 'context' => 'Order' ) );

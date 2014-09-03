@@ -24,8 +24,6 @@ class Event_Shortcodes {
 	private function query() {
 		$atts = $this->attributes();
 
-		FB::log( $atts, '$atts' );
-
 		$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
 		$args = array(
