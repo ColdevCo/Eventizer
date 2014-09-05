@@ -63,6 +63,12 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
             <p><?= $event->post_excerpt; ?></p>
         <?php endif; ?>
 
+        <?php if ( isset($_COOKIE['notice']) ) : ?>
+        <div class="input-group">
+            <label><?= $_COOKIE['notice'] ?></label>
+        </div>
+        <?php endif; ?>
+
         <?php if ( $tickets ) : ?>
 
         <div class="input-group">

@@ -33,7 +33,12 @@ add_action( 'template_redirect', function(){
 
     $mail = get_mail_by_context( 'Order' );
 
-    wp_mail( $email, $mail->subject, $mail->content );
+
+    if ( wp_mail( $email, $mail->subject, $mail->content ) ) {
+
+        $_COOKIE['notice'] = "Thank you, we receive your order";
+
+    }
 
 	wp_redirect( $_SERVER[ 'HTTP_REFERER' ] );
 	exit;
