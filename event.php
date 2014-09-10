@@ -138,21 +138,25 @@ class Eventizer {
             'post_title'    => 'Events',
             'post_name'     => 'event_list',
             'post_status'   => 'publish',
+            'page_template' => __EVENTIZER_TEMPLATES_PATH__ . 'eventizer_list.php'
         );
         wp_insert_post( $my_post );
     }
 
     public function register_default_event_list_template()
     {
-        add_filter( 'page_template', function( $page_template ){
+        $templates = wp_get_theme()->get_page_templates();
+        $templates[ __EVENTIZER_TEMPLATES_PATH__ . 'eventizer_list.php' ] = 'Eventizer List';
+        wp_cache_set( 'page_templates-' . md5( get_template_directory() ) , $templates, 'themes' );
 
-            if ( is_page( 'event_list' ) ) {
-                if( file_exists( __EVENTIZER_TEMPLATES_PATH__. 'event_list_template.php' ) )
-                    $page_template = __EVENTIZER_TEMPLATES_PATH__. 'event_list_template.php';
+        add_action( 'template_redirect', function() {
+            global $post;
+
+            if ( 'eventizer_list.php' === basename( $post->page_template ) ) {
+                load_template( $post->page_template );
+                exit();
             }
-
-            return $page_template;
-        });
+        } );
     }
 
     public function register_default_single_event_template()
@@ -161,8 +165,8 @@ class Eventizer {
             global $wp_query, $post;
 
             if ( $post->post_type == "event" ){
-                if( file_exists( __EVENTIZER_TEMPLATES_PATH__. 'single_event_default.php' ) )
-                    $single = __EVENTIZER_TEMPLATES_PATH__ . 'single_event_default.php';
+                if( file_exists( __EVENTIZER_TEMPLATES_PATH__. 'single_eventizer.php' ) )
+                    $single = __EVENTIZER_TEMPLATES_PATH__ . 'single_eventizer.php';
             }
             return $single;
         });
