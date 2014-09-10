@@ -128,7 +128,13 @@ class Eventizer {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
 
-        $wpdb->insert( $table_name , array( 'subject' => 'Thanks' , 'content' => 'Test', 'context' => 'Order' ) );
+        $wpdb->insert( $table_name ,
+            array(
+                'subject' => 'Thanks' ,
+                'content' => 'We received your order, we\'ll contact you again later by mail or phone. Thanks.',
+                'context' => 'Order'
+            )
+        );
     }
 
     public function add_events_page()
