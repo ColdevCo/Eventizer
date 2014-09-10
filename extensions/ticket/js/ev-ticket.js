@@ -4,6 +4,14 @@
 
 jQuery(document).ready(function () {
 	EvTicket.setWidth();
+
+    jQuery('.ticket-details').hide().eq(0).show();
+    jQuery('#cem_widget_ticket-ticket_id').bind('change',function(){
+        var ticket_id = jQuery(this).val();
+
+        jQuery('.ticket-details').hide();
+        jQuery('.ticket-details.ticket-' + ticket_id).show();
+    });
 });
 
 var EvTicket = {
@@ -21,7 +29,6 @@ var EvTicket = {
 				jQuery(this).addClass('active');
 			})
 		});
-		console.log(totalWidth);
 
 		this.wrapper.width(totalWidth);
 	}

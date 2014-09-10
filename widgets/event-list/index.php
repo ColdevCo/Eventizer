@@ -10,7 +10,11 @@ class EventList extends WP_Widget {
 	 */
 	function __construct()
 	{
-		$this->WP_Widget( 'event_list' , 'Event List' );
+		parent::__construct(
+            'event_list' ,
+            'Eventizer: Event List',
+            array( 'description' => 'Show list of upcoming events.')
+        );
 	}
 
 	/**

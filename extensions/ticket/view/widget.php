@@ -36,7 +36,7 @@ switch ( $featured_option ) {
 
 if( $event ) {
     $tickets = EventTicket::get_event_tickets( $event->ID, true );
-    $tickets = array_reduce($tickets, function($result, $data){ $result["{$data->id} "] = $data->name; return $result; }, array());
+    $ticket_options = array_reduce($tickets, function($result, $data){ $result["{$data->id} "] = $data->name; return $result; }, array());
 }
 
 wp_enqueue_script( 'ev-ticket', plugins_url( '', dirname( __FILE__ ) ) . '/js/ev-ticket.js', array( 'jquery' ) );
@@ -95,9 +95,17 @@ wp_enqueue_style( 'ev-ticket-style', plugins_url( '', dirname( __FILE__ ) ) . '/
         <div class="input-group">
 
             <?= HTML::label( 'Type', 'cem_widget_ticket-ticket_id' ); ?>
-            <?= HTML::dropdown( 'cem_widget_ticket-ticket_id', $tickets, array( 'id' => 'cem_widget_ticket-ticket_id' ) ); ?>
+            <?= HTML::dropdown( 'cem_widget_ticket-ticket_id', $ticket_options, array( 'id' => 'cem_widget_ticket-ticket_id' ) ); ?>
 
         </div>
+
+        <?php foreach ( $tickets as $ticket ) : ?>
+            <div class="input-group ticket-details ticket-<?= $ticket->id; ?>">
+                <label>Price: <?= get_event_options( 'default_currency' ) . ' ' . number_format($ticket->price) ?></label>
+                <label>Min/Max Buy: <?= $ticket->min_buy . ' - ' . $ticket->max_buy ?></label>
+                <label>Quota: <?= $ticket->quota ?></label>
+            </div>
+        <?php endforeach; ?>
 
         <div class="input-group">
 

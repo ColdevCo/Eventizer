@@ -13,7 +13,11 @@ class SubscribeMailChimp extends WP_Widget {
 	 */
 	function __construct()
 	{
-		$this->WP_Widget( 'subscribe_mailchimp' , 'Subscribe to MailChimp' );
+		parent::__construct(
+            'subscribe_mailchimp' ,
+            'Eventizer: Subscribe',
+            array( 'description' => 'Subscribe to Mailchimp.')
+        );
 	}
 
 	/**

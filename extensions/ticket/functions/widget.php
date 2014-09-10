@@ -11,7 +11,11 @@ class TicketWidget extends WP_Widget {
 	 */
 	function __construct()
 	{
-		$this->WP_Widget( 'event_ticket' , 'Ticket' );
+        parent::__construct(
+            'event_ticket' ,
+            'Eventizer: Ticket',
+            array( 'description' => 'Form order ticket.' )
+        );
 	}
 
 	/**
