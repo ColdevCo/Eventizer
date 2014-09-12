@@ -12,8 +12,6 @@ How to use
 
 > **Note:** When Eventizer is activated, it automatically add a new page titled "Events". The page will showing all of available upcoming events. If by any chances the page isn't there, you could add a new page manually and put a shortcode "[eventlist]" in the content section or simply set the page template to "Eventizer List".
 
----------------------------------------------------------------------------------------------------
-
 
 Eventizer API
 ===============
