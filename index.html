@@ -1,87 +1,259 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Eventizer by ColdevCo</title>
-  </head>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>Eventizer by ColdevCo</title>
+        <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+        <link rel="stylesheet" type="text/css" href="uikit/css/uikit.almost-flat.min.css" media="screen" />
+        <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=basic&skin=sunburst"></script>
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="uikit/js/uikit.min.js"></script>
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
 
-  <body>
-    <div id="container">
-      <div class="inner">
+    <body>
+        <div id="container">
+            <div class="inner">
 
-        <header>
-          <h1>Eventizer</h1>
-          <h2>A simple wordpress plugin to help you manage your events</h2>
-        </header>
+                <header>
+                    
+                    <div class="uk-button-dropdown tm-search-nav" data-uk-dropdown="{mode:'click'}">
+                        <button class="uk-button uk-button-primary"><i class="uk-icon-search"></i></button>
+                        <div style="" class="uk-dropdown uk-dropdown-width-4">
+                            <div class="uk-grid uk-dropdown-grid">
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/ColdevCo/Eventizer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/ColdevCo/Eventizer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/ColdevCo/Eventizer" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+                                <div class="uk-width-1-4">
+                                    <ul class="uk-nav uk-nav-dropdown uk-panel">
+                                        <li class="uk-nav-header">Hook</li>
+                                        <li><a href="#eventizer_init">eventizer_init</a></li>
+                                        <li><a href="#eventizer_render">eventizer_render</a></li>
+                                        <li><a href="#eventizer_save">eventizer_save</a></li>
+                                    </ul>
+                                </div>
 
-        <hr>
+                                <div class="uk-width-1-4">
+                                    <ul class="uk-nav uk-nav-dropdown uk-panel">
+                                        <li class="uk-nav-header">Filter</li>
+                                        <li><a href="#ev_setting_tabs">ev_setting_tabs</a></li>
+                                    </ul>
+                                </div>
 
-        <section id="main_content">
-          <h1>
-<a name="eventizer-api" class="anchor" href="#eventizer-api"><span class="octicon octicon-link"></span></a>Eventizer API</h1>
+                                <div class="uk-width-1-4">
+                                    <ul class="uk-nav uk-nav-dropdown uk-panel">
+                                        <li class="uk-nav-header">Function</li>
+                                        <li><a href="#add_event_options">add_event_options</a></li>
+                                        <li><a href="#get_event_options">get_event_options</a></li>
+                                        <li><a href="#update_event_options">update_event_options</a></li>
+                                        <li><a href="#delete_event_options">delete_event_options</a></li>
+                                        <li><a href="#add_mail">add_mail</a></li>
+                                        <li><a href="#update_mail">update_mail</a></li>
+                                        <li><a href="#delete_mail">delete_mail</a></li>
+                                        <li><a href="#get_all_mails">get_all_mails</a></li>
+                                        <li><a href="#get_mail">get_mail</a></li>
+                                        <li><a href="#get_mail_by_context">get_mail_by_context</a></li>
+                                    </ul>
+                                </div>
 
-<p>Custom Hooks:</p>
+                                <div class="uk-width-1-4">
+                                    <ul class="uk-nav uk-nav-dropdown uk-panel">
+                                        <li class="uk-nav-header">Helper</li>
+                                        <li><a href="#label">label</a></li>
+                                        <li><a href="#hidden">hidden</a></li>
+                                        <li><a href="#text">text</a></li>
+                                        <li><a href="#textarea">textarea</a></li>
+                                        <li><a href="#radio">radio</a></li>
+                                        <li><a href="#checkbox">checkbox</a></li>
+                                        <li><a href="#dropdown">dropdown</a></li>
+                                        <li><a href="#button">button</a></li>
+                                        <li><a href="#datepicker">datepicker</a></li>
+                                        <li><a href="#timepicker">timepicker</a></li>
+                                        <li><a href="#geoinput">geoinput</a></li>
+                                    </ul>
+                                </div>
 
-<ul>
-<li>eventizer_init</li>
-<li>eventizer_render</li>
-<li>eventizer_save</li>
-</ul><p>Custom Filter:</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h1>Eventizer API</h1>
+                    <h2>List of all custom hooks, filters, and functions documentation</h2>
+                    
+                </header>
 
-<ul>
-<li>ev_setting_tabs</li>
-</ul><p>Functions:</p>
+                <section id="downloads" class="clearfix">
+                    <a href="https://github.com/ColdevCo/Eventizer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+                    <a href="https://github.com/ColdevCo/Eventizer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+                    <a href="https://github.com/ColdevCo/Eventizer" id="view-on-github" class="button"><span>View on GitHub</span></a>
+                </section>
 
-<ul>
-<li>add_event_options</li>
-<li>get_event_options</li>
-<li>update_event_options</li>
-<li>delete_event_options</li>
-</ul><ul>
-<li>add_mail</li>
-<li>update_mail</li>
-<li>delete_mail</li>
-<li>get_all_mails</li>
-<li>get_mail</li>
-<li>get_mail_by_context</li>
-</ul><p>Helpers:</p>
+                <hr>
 
-<ul>
-<li>label</li>
-<li>hidden</li>
-<li>text</li>
-<li>textarea</li>
-<li>radio</li>
-<li>checkbox</li>
-<li>dropdown</li>
-<li>button</li>
-<li>datepicker</li>
-<li>timepicker</li>
-<li>geoinput</li>
-</ul>
-        </section>
+                <section id="main_content">
 
-        <footer>
-          Eventizer is maintained by <a href="https://github.com/ColdevCo">ColdevCo</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+                    <div class="uk-grid">
+                        
+                        <div class="uk-width-1-1">
+                            <h3>Custom Hook</h3>
 
-        
-      </div>
-    </div>
-  </body>
+                            <dl>
+                                <dt id="eventizer_init"><strong>eventizer_init</strong></dt>
+                                <dd>Triggered after Eventizer initialized</dd>
+                                <pre class="prettyprint">
+add_action( 'eventizer_init', 'your_callback_here' );
+function your_callback_here() {
+    // Your code here
+}
+                                </pre>
+                                <dt id="eventizer_render"><strong>eventizer_render</strong></dt>
+                                <dd>Triggered after Eventizer render event's form</dd>
+                                <pre class="prettyprint">
+add_action( 'eventizer_render', 'your_callback_here' );
+function your_callback_here() {
+    // Your code here
+}
+                                </pre>
+                                <dt id="eventizer_save"><strong>eventizer_save</strong></dt>
+                                <dd>Triggered after Eventizer save event's data</dd>
+                                <pre class="prettyprint">
+add_action( 'eventizer_save', 'your_callback_here' );
+function your_callback_here() {
+    // Your code here
+}
+                                </pre>
+                            </dl>
+                        </div>    
+                    </div>
+                    
+                    <div class="uk-grid">
+                        <div class="uk-width-1-1">
+                            <h3>Custom Filter</h3>
+
+                            <dl>
+                                <dt id="ev_setting_tabs"><strong>ev_setting_tabs</strong></dt>
+                                <dd>To add tab menu items inside Eventizer Settings</dd>
+                                <pre class="prettyprint">
+add_action( 'ev_setting_tabs', 'your_callback_here' );
+function your_callback_here( $tab_items ) {
+    // Your code here
+    return $tab_items;
+}
+                                </pre>
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    <div class="uk-grid">
+                        <div class="uk-width-1-1">
+                            <h3>Function</h3>
+
+                            <dl>
+                                <dt id="add_event_options"><strong>add_event_options</strong></dt>
+                                <dd>To add Event Option</dd>
+                                <pre class="prettyprint">add_event_options( 'option_key', 'option_value' );</pre>
+                                <dt id="get_event_options"><strong>get_event_options</strong></dt>
+                                <dd>To get Event Option</dd>
+                                <pre class="prettyprint">get_event_options( 'option_key' );</pre>
+                                <dt id="update_event_options"><strong>update_event_options</strong></dt>
+                                <dd>To update Event Option</dd>
+                                <pre class="prettyprint">update_event_options( 'option_key', 'option_value' );</pre>
+                                <dt id="delete_event_options"><strong>delete_event_options</strong></dt>
+                                <dd>To delete Event Option</dd>
+                                <pre class="prettyprint">delete_event_options( 'option_key' );</pre>
+                            </dl>
+
+                            <dl>
+                                <dt id="add_mail"><strong>add_mail</strong></dt>
+                                <dd>To add Event Mail</dd>
+                                <pre class="prettyprint">
+$mail = array( 
+    'cem_mail_editor_subject' => 'your_mail_subject',
+    'cem_mail_editor_content' => 'your_mail_content',
+    'cem_mail_editor_context' => 'your_mail_context'
+);
+add_mail( $mail );
+                                </pre>
+                                <dt id="update_mail"><strong>update_mail</strong></dt>
+                                <dd>To update Event Mail</dd>
+                                <pre class="prettyprint">
+$mail_id = // Your mail ID
+$mail = array( 
+    'cem_mail_editor_subject' => 'your_mail_subject',
+    'cem_mail_editor_content' => 'your_mail_content',
+    'cem_mail_editor_context' => 'your_mail_context'
+);
+update_mail( $mail_id, $mail );
+                                </pre>
+                                <dt id="delete_mail"><strong>delete_mail</strong></dt>
+                                <dd>To delete Event Mail</dd>
+                                <pre class="prettyprint">
+$mail_context = // Your mail context
+delete_mail( $mail_context );
+                                </pre>
+                                <dt id="get_all_mails"><strong>get_all_mails</strong></dt>
+                                <dd>To get all Event Mails</dd>
+                                <pre class="prettyprint">get_all_mails();</pre>
+                                <dt id="get_mail"><strong>get_mail</strong></dt>
+                                <dd>To get Event Mail by id</dd>
+                                <pre class="prettyprint">
+$mail_id = // Your mail ID
+get_mail( $mail_id );
+                                </pre>
+                                <dt id="get_mail_by_context"><strong>get_mail_by_context</strong></dt>
+                                <dd>To get Event Mail by context</dd>
+                                <pre class="prettyprint">
+$mail_context = // Your mail context
+get_mail_by_context( $mail_context );
+                                </pre>
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    <div class="uk-grid">
+                        <div class="uk-width-1-1">
+                            <h3>Helper</h3>
+
+                            <dl>
+                                <dt id="label"><strong>label</strong></dt>
+                                <pre class="prettyprint">echo HTML::label( $text, $name [, $attributes ] );</pre>
+                                <dt id="hidden"><strong>hidden</strong></dt>
+                                <pre class="prettyprint">echo HTML::hidden( $name, $value [, $attributes ] );</pre>
+                                <dt id="text"><strong>text</strong></dt>
+                                <pre class="prettyprint">echo HTML::text( $name [, $attributes ] )</pre>
+                                <dt id="textarea"><strong>textarea</strong></dt>
+                                <pre class="prettyprint">echo HTML::textarea( $name [, $attributes ] );</pre>
+                                <dt id="radio"><strong>radio</strong></dt>
+                                <pre class="prettyprint">echo HTML::radio( $text, $name [, $attributes ] );</pre>
+                                <dt id="checkbox"><strong>checkbox</strong></dt>
+                                <pre class="prettyprint">echo HTML::checkbox( $text, $name [, $attributes ] );</pre>
+                                <dt id="dropdown"><strong>dropdown</strong></dt>
+                                <pre class="prettyprint">echo HTML::dropdown( $name [, $options [, $attributes ] ] );</pre>
+                                <dt id="button"><strong>button</strong></dt>
+                                <pre class="prettyprint">echo HTML::button( $name [, $attributes ] );</pre>
+                                <dt id="datepicker"><strong>datepicker</strong></dt>
+                                <pre class="prettyprint">echo HTML::datepicker( $name [, $options ] );</pre>
+                                <dt id="timepicker"><strong>timepicker</strong></dt>
+                                <pre class="prettyprint">echo HTML::timepicker( $name [, $options ] );</pre>
+                                <dt id="geoinput"><strong>geoinput</strong></dt>
+                                <pre class="prettyprint">echo HTML::geoinput( $name [, $attributes ] );</pre>
+                            </dl>
+                        </div>
+                    </div>
+
+                </section>
+
+                <footer>
+                    Eventizer is maintained by <a href="https://github.com/ColdevCo">ColdevCo</a><br>
+                    This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+                </footer>
+
+
+            </div>
+        </div>
+    </body>
 </html>

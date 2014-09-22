@@ -237,6 +237,12 @@ form {
   
 }
 
+.tm-search-nav {
+    position: fixed !important;
+    margin-top: 38px;
+    margin-left: -80px;
+}
+
 
 /* GENERAL ELEMENT TYPE STYLES */
 
@@ -294,7 +300,7 @@ blockquote {
   padding: 0 0 0 30px;
 }
 
-ul li {
+ul:not(.uk-nav) li {
   list-style: disc inside;
   padding-left: 20px;
 }
